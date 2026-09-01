@@ -55,6 +55,7 @@ function App() {
     showArchived,
     filteredNotes,
     isLoading,
+    hasLoaded,
     setActiveTag,
     setSearchQuery,
     setShowArchived,
@@ -149,7 +150,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!pendingNoteLink || isLoading) return;
+    // Wait until the notes have actually loaded — isLoading is also false
+    // before the first fetch starts, so it can't distinguish "still fetching"
+    // from "loaded and the note genuinely isn't there".
+    if (!pendingNoteLink || !hasLoaded) return;
     const note = notes.find(n => n.id === pendingNoteLink.id);
     if (note) {
       handleNoteClick(note, pendingNoteLink.edit ? 'edit' : 'view');
@@ -159,7 +163,7 @@ function App() {
     // the normal app instead of sitting on the splash forever.
     setPendingNoteLink(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingNoteLink, notes, isLoading]);
+  }, [pendingNoteLink, notes, hasLoaded]);
 
   /**
    * Fetch shared note by ID

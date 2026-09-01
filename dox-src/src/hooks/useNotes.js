@@ -17,12 +17,20 @@ export function useNotes(userHash) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showArchived, setShowArchived] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // True once the first fetch for the current user has completed. Unlike
+  // isLoading (which is also false before the fetch starts), this lets
+  // callers distinguish "loaded, note really isn't there" from "still
+  // fetching" — e.g. when resolving a /dox/?note= deep link.
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   /**
    * Fetch all data for the user
    */
   const fetchData = useCallback(async () => {
-    if (!userHash) return;
+    if (!userHash) {
+      setHasLoaded(false);
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -34,10 +42,12 @@ export function useNotes(userHash) {
 
       setNotes(userNotes || []);
       setTags(userTags || []);
+      setHasLoaded(true);
     } catch (error) {
       console.error('Failed to fetch data:', error);
       setNotes([]);
       setTags([]);
+      setHasLoaded(true);
     }
 
     setIsLoading(false);
@@ -223,6 +233,7 @@ export function useNotes(userHash) {
     searchQuery,
     showArchived,
     isLoading,
+    hasLoaded,
     filteredNotes,
     setActiveTag,
     setSearchQuery,
