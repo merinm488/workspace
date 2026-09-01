@@ -3,7 +3,6 @@ import { useAuth } from './hooks/useAuth';
 import { useNotes } from './hooks/useNotes';
 import { useTheme } from './hooks/useTheme';
 import { Login } from './components/Login';
-import { SplashScreen } from './components/SplashScreen';
 import { ThemeToggle } from './components/ThemeToggle';
 import { UserDisplay } from './components/UserDisplay';
 import { TagList } from './components/TagList';
@@ -32,7 +31,6 @@ function App() {
     userHash,
     isAuthenticated,
     isLoading: authLoading,
-    isCheckingSession,
     error: authError,
     errorCode,
     login,
@@ -130,38 +128,41 @@ function App() {
     }
   }, []);
 
-  // Workspace deep link: /dox/?note=<id> opens that note once notes are loaded.
-  // &edit=1 (sent when the file was just created) opens it straight into the
-  // editor. Both values are captured in state (the URL is cleared
-  // immediately), then the second effect opens the note as soon as the data
-  // actually arrives.
-  const [pendingNoteLink, setPendingNoteLink] = useState(() => {
+  // Workspace deep link: /dox/?note=<id> opens that note. &edit=1 (sent when
+  // the file was just created) opens it straight into the editor on the very
+  // first paint — no home-page or login flash in between. The note already
+  // exists server-side (the workspace creates it before redirecting here),
+  // so edit mode can start from a stub { id } with empty title/content.
+  // View links (no &edit=1) wait for the notes fetch so the real content is
+  // there when the preview opens.
+  const [pendingNoteLink] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('note');
     return id ? { id, edit: params.get('edit') === '1' } : null;
   });
 
+  const [editLinkNote, setEditLinkNote] = useState(null);
+
   useEffect(() => {
-    if (pendingNoteLink) {
-      // Clean the URL so refresh/back don't re-trigger the deep link
-      window.history.replaceState({}, '', window.location.pathname);
+    if (!pendingNoteLink) return;
+    // Clean the URL so refresh/back don't re-trigger the deep link
+    window.history.replaceState({}, '', window.location.pathname);
+
+    if (pendingNoteLink.edit) {
+      // Editor on first paint: NoteDetailView only needs the id in edit mode
+      // (auto-save targets it); title/content start empty like a fresh note.
+      setEditLinkNote({ id: pendingNoteLink.id });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // Wait until the notes have actually loaded — isLoading is also false
-    // before the first fetch starts, so it can't distinguish "still fetching"
-    // from "loaded and the note genuinely isn't there".
-    if (!pendingNoteLink || !hasLoaded) return;
+    // View-mode deep links wait for the real note to arrive
+    if (!pendingNoteLink || pendingNoteLink.edit || !hasLoaded) return;
     const note = notes.find(n => n.id === pendingNoteLink.id);
     if (note) {
-      handleNoteClick(note, pendingNoteLink.edit ? 'edit' : 'view');
+      handleNoteClick(note, 'view');
     }
-    // Found or not, the link is resolved: opening the note shows the editor
-    // over the app; a missing note (deleted / bad link) just falls through to
-    // the normal app instead of sitting on the splash forever.
-    setPendingNoteLink(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingNoteLink, notes, hasLoaded]);
 
@@ -283,15 +284,13 @@ function App() {
     setActiveNote(null);
   }, []);
 
-  // ===== SPLASH — session check / workspace deep link still settling =====
-  // Covers the gap where a returning user (or a /dox/?note= deep link) would
-  // otherwise see the login screen or the notes list flash by for a split
-  // second before the real destination renders. Without a session the check
-  // completes immediately and the login screen shows as before.
-  if (isCheckingSession || (pendingNoteLink && isAuthenticated)) {
-    const splashEffectiveTheme = getEffectiveTheme();
-    return <SplashScreen dark={splashEffectiveTheme === 'dark'} />;
-  }
+  /**
+   * Handle going back from an editor opened directly by a workspace create
+   * link (editLinkNote): close the editor and fall through to the normal app.
+   */
+  const handleBackEditLink = useCallback(() => {
+    setEditLinkNote(null);
+  }, []);
 
   // ===== SHARED NOTE VIEW - Works without login =====
   if (sharedNote !== null) {
@@ -719,14 +718,18 @@ function App() {
       </div>
 
       {/* ===== NOTE DETAIL VIEW ===== */}
-      {isNoteViewOpen && activeNote && (
+      {(isNoteViewOpen || editLinkNote) && (
         <NoteDetailView
-          note={activeNote.mode === 'create' ? null : activeNote.note}
-          initialMode={activeNote.mode === 'create' ? 'edit' : activeNote.mode}
+          note={editLinkNote
+            ? editLinkNote
+            : (activeNote.mode === 'create' ? null : activeNote.note)}
+          initialMode={editLinkNote
+            ? 'edit'
+            : (activeNote.mode === 'create' ? 'edit' : activeNote.mode)}
           tags={tags}
           userHash={userHash}
           activeTag={activeTag}
-          onBack={handleBackNoteView}
+          onBack={editLinkNote ? handleBackEditLink : handleBackNoteView}
           onDelete={handleDeleteNote}
           onUpdateNote={handleSaveNote}
           onShare={handleShare}

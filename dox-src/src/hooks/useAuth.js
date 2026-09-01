@@ -6,12 +6,17 @@ import { generateHash, isValidKey, normalizeKey } from '../lib/cryptoUtils';
  * Manages login, account creation via TextDB API
  */
 export function useAuth() {
-  const [userHash, setUserHash] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Initialize synchronously from sessionStorage so a returning user's first
+  // paint is the app itself — no login-screen flash, and no splash gate while
+  // the session is checked. checkSession() verifies the hash with the server
+  // in the background and clears the session if it is no longer valid.
+  const [userHash, setUserHash] = useState(
+    () => sessionStorage.getItem('dox_hash') || sessionStorage.getItem('secure_notes_hash')
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => Boolean(sessionStorage.getItem('dox_hash') || sessionStorage.getItem('secure_notes_hash'))
+  );
   const [isLoading, setIsLoading] = useState(false);
-  // True until the initial session check completes, so the app can show a
-  // splash instead of flashing the login screen for returning users.
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [error, setError] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
 
@@ -194,25 +199,32 @@ export function useAuth() {
   }, []);
 
   /**
-   * Check for existing session on mount
+   * Verify the session hash with the server in the background. The session
+   * is already trusted optimistically at first paint (see useState above);
+   * this only corrects the record when the hash is stale or the account is
+   * gone, so a revoked session lands on the login screen after load.
    */
   const checkSession = useCallback(async () => {
     // Fall back to legacy key so existing sessions survive the rename
     const savedHash = sessionStorage.getItem('dox_hash') || sessionStorage.getItem('secure_notes_hash');
+    if (!savedHash) return false;
     try {
-      if (savedHash) {
-        const response = await fetch(`/api/notes?hash=${encodeURIComponent(savedHash)}`);
-        if (response.ok) {
-          setUserHash(savedHash);
-          setIsAuthenticated(true);
-          return true;
-        }
+      const response = await fetch(`/api/notes?hash=${encodeURIComponent(savedHash)}`);
+      if (response.ok) {
+        return true;
       }
     } catch (error) {
+      // Network hiccup: keep the optimistic session rather than logging out
       console.error('Session check failed:', error);
-    } finally {
-      setIsCheckingSession(false);
+      return true;
     }
+    // Hash no longer valid server-side - clear the session
+    sessionStorage.removeItem('dox_hash');
+    sessionStorage.removeItem('secure_notes_hash');
+    sessionStorage.removeItem('dox_key');
+    sessionStorage.removeItem('secure_notes_key');
+    setUserHash(null);
+    setIsAuthenticated(false);
     return false;
   }, []);
 
@@ -228,7 +240,6 @@ export function useAuth() {
     userHash,
     isAuthenticated,
     isLoading,
-    isCheckingSession,
     error,
     errorCode,
     login,
