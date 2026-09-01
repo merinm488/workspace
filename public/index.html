@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <title>Workspace</title>
+    <meta name="description" content="Workspace — your unified home for Dox documents and Grids spreadsheets.">
+    <meta name="theme-color" content="#4F46E5">
+
+    <!-- App Icons (shared with grids icons) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/grids/icons/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/grids/icons/apple-touch-icon.png">
+
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/workspace.css">
+</head>
+<body>
+    <!-- Background decoration -->
+    <div class="ws-background">
+        <div class="ws-bg-circle ws-bg-circle-top-right"></div>
+        <div class="ws-bg-circle ws-bg-circle-bottom-left"></div>
+    </div>
+
+    <!-- ===== LOGIN VIEW ===== -->
+    <div id="loginView" class="ws-login-view hidden">
+        <div class="ws-login-card">
+            <div class="ws-login-logo">
+                <div class="ws-logo-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 01-1-1h4a1 1 0 001 1v4a1 1 0 001 1h3a1 1 0 001-1V10" />
+                    </svg>
+                </div>
+                <h1 class="ws-login-title">Workspace</h1>
+            </div>
+
+            <form id="loginForm" class="ws-login-form">
+                <div class="ws-form-group">
+                    <label for="keyInput" class="ws-label">Access Key</label>
+                    <input
+                        type="text"
+                        id="keyInput"
+                        class="ws-input"
+                        placeholder="Enter your access key"
+                        autocomplete="off"
+                        autofocus
+                    >
+                </div>
+
+                <p id="loginError" class="ws-login-error hidden"></p>
+
+                <button type="submit" id="loginSubmit" class="ws-primary-btn ws-login-submit">
+                    <span class="ws-btn-text">Sign in</span>
+                    <span class="ws-btn-spinner hidden"></span>
+                </button>
+            </form>
+
+            <button id="loginThemeToggle" class="ws-login-theme-toggle" aria-label="Toggle theme">
+                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== HOME VIEW ===== -->
+    <div id="homeView" class="ws-home-view hidden">
+        <main class="ws-container">
+            <!-- Header -->
+            <header class="ws-header">
+                <div class="ws-header-content">
+                    <!-- Logo -->
+                    <a href="/" class="ws-logo">
+                        <div class="ws-logo-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 01-1-1h4a1 1 0 001 1v4a1 1 0 001 1h3a1 1 0 001-1V10" />
+                            </svg>
+                        </div>
+                        <span class="ws-logo-text">Workspace</span>
+                    </a>
+
+                    <!-- Search -->
+                    <div class="ws-search-container">
+                        <div class="ws-search-wrapper">
+                            <svg class="ws-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search docs and grids..."
+                                class="ws-search-input"
+                            >
+                            <button id="clearSearch" class="ws-search-clear hidden" aria-label="Clear search">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="ws-actions">
+                        <!-- + New with dropdown -->
+                        <div class="ws-new-container">
+                            <button id="newBtn" class="ws-new-btn">
+                                <svg class="ws-new-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span class="ws-new-text">New</span>
+                                <svg class="ws-new-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div id="newDropdown" class="ws-dropdown ws-dropdown-right">
+                                <!-- Items rendered by JS from WS_APPS -->
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="ws-settings-container">
+                            <button id="settingsBtn" class="ws-icon-btn" aria-label="Settings">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </button>
+                            <div id="settingsDropdown" class="ws-dropdown ws-dropdown-right">
+                                <div class="ws-theme-container">
+                                    <button class="ws-dropdown-item" id="themeToggleBtn">
+                                        <svg class="ws-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="5"></circle>
+                                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                        </svg>
+                                        <span class="ws-item-text" id="themeText">Theme: Dark</span>
+                                        <svg class="ws-dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div id="themeSubmenu" class="ws-theme-submenu">
+                                        <button class="ws-theme-option" data-theme="light">
+                                            <svg class="ws-theme-option-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="5"></circle>
+                                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                            </svg>
+                                            <span>Light</span>
+                                        </button>
+                                        <button class="ws-theme-option" data-theme="dark">
+                                            <svg class="ws-theme-option-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                            </svg>
+                                            <span>Dark</span>
+                                        </button>
+                                        <button class="ws-theme-option" data-theme="system">
+                                            <svg class="ws-theme-option-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                                            </svg>
+                                            <span>System</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="ws-dropdown-item" id="viewKeyBtn">
+                                    <svg class="ws-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                                    </svg>
+                                    <span class="ws-item-text">View My Key</span>
+                                </button>
+                                <div class="ws-dropdown-divider"></div>
+                                <button class="ws-dropdown-item ws-item-danger" id="deleteAccountBtn">
+                                    <svg class="ws-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                    <span class="ws-item-text">Delete Account</span>
+                                </button>
+                                <button class="ws-dropdown-item" id="logoutBtn">
+                                    <svg class="ws-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    <span class="ws-item-text">Logout</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Filter bar: All files / app chooser + view toggle -->
+            <div class="ws-filter-bar">
+                <div class="ws-filters">
+                    <button class="ws-filter active" data-filter="all">All files</button>
+                    <div class="ws-filter-chooser" id="filterChooser">
+                        <button id="filterChooserBtn" class="ws-filter ws-filter-chooser-btn" aria-haspopup="menu" aria-expanded="false">
+                            <span class="ws-filter-chooser-icon hidden" id="filterChooserIcon"></span>
+                            <span id="filterChooserLabel">Apps</span>
+                            <svg class="ws-new-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="filterDropdown" class="ws-dropdown">
+                            <!-- Items rendered by JS from WS_APPS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="ws-view-toggle" id="viewToggle" role="group" aria-label="Switch between grid and list view">
+                    <button class="ws-view-btn active" data-view="grid" aria-label="Grid view" title="Grid view">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </button>
+                    <button class="ws-view-btn" data-view="list" aria-label="List view" title="List view">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section title -->
+            <div class="ws-view-indicator">
+                <h2 id="viewTitle" class="ws-view-title">Recent files</h2>
+                <span id="viewCount" class="ws-view-count"></span>
+                <span id="searchHint" class="ws-search-hint hidden">in search results</span>
+            </div>
+
+            <!-- Files -->
+            <div id="filesGrid" class="ws-files-grid"></div>
+            <div id="filesList" class="ws-files-list hidden"></div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="ws-empty-state hidden">
+                <div class="ws-empty-icon-wrapper">
+                    <svg class="ws-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 01-1-1h4a1 1 0 001 1v4a1 1 0 001 1h3a1 1 0 001-1V10" />
+                    </svg>
+                </div>
+                <h3 class="ws-empty-title">Nothing here yet</h3>
+                <p class="ws-empty-description">Create a doc or a grid to get started</p>
+                <div class="ws-empty-actions">
+                    <div class="ws-new-container ws-empty-new">
+                        <button id="emptyNewBtn" class="ws-primary-btn ws-empty-new-btn">
+                            <svg class="ws-new-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span class="ws-btn-text">New</span>
+                            <svg class="ws-new-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div id="emptyNewDropdown" class="ws-dropdown ws-dropdown-up">
+                            <!-- Items rendered by JS from WS_APPS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+    <!-- Rename modal -->
+    <div id="renameModal" class="ws-modal">
+        <div class="ws-modal-content">
+            <div class="ws-modal-header">
+                <h3 class="ws-modal-title">Rename</h3>
+                <button class="ws-modal-close" id="renameModalClose">&times;</button>
+            </div>
+            <div class="ws-modal-body">
+                <label for="renameInput" class="ws-label">New Name</label>
+                <input type="text" id="renameInput" class="ws-input" placeholder="Enter new name..." maxlength="200">
+                <div class="ws-modal-actions">
+                    <button id="cancelRename" class="ws-secondary-btn">Cancel</button>
+                    <button id="confirmRename" class="ws-primary-btn">Rename</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete file modal -->
+    <div id="deleteModal" class="ws-modal">
+        <div class="ws-modal-content">
+            <div class="ws-modal-header">
+                <h3 class="ws-modal-title">Delete File</h3>
+                <button class="ws-modal-close" id="deleteModalClose">&times;</button>
+            </div>
+            <div class="ws-modal-body">
+                <p class="ws-modal-text">
+                    Are you sure you want to delete "<span id="deleteFileName" class="ws-strong"></span>"? This cannot be undone.
+                </p>
+                <div class="ws-modal-actions">
+                    <button id="cancelDelete" class="ws-secondary-btn">Cancel</button>
+                    <button id="confirmDelete" class="ws-danger-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key modal -->
+    <div id="keyModal" class="ws-modal">
+        <div class="ws-modal-content">
+            <div class="ws-modal-header">
+                <h3 class="ws-modal-title">Your Access Key</h3>
+                <button class="ws-modal-close" id="keyModalClose">&times;</button>
+            </div>
+            <div class="ws-modal-body">
+                <div class="ws-key-display">
+                    <span class="ws-key-text" id="keyText">-</span>
+                    <button class="ws-key-copy-btn" id="keyCopyBtn" title="Copy key">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p class="ws-key-feedback" id="keyCopyFeedback">Copied!</p>
+                <p class="ws-key-note">Your key is your login. Anyone with this key can access your files.</p>
+                <button class="ws-secondary-btn ws-key-close" id="keyModalCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete account modal -->
+    <div id="deleteAccountModal" class="ws-modal">
+        <div class="ws-modal-content">
+            <div class="ws-modal-header">
+                <h3 class="ws-modal-title">Delete Account</h3>
+                <button class="ws-modal-close" id="deleteAccountModalClose">&times;</button>
+            </div>
+            <div class="ws-modal-body">
+                <p class="ws-modal-text">
+                    Are you sure you want to delete your account? This permanently removes all your docs and grids and cannot be undone.
+                </p>
+                <div class="ws-modal-actions">
+                    <button id="cancelDeleteAccount" class="ws-secondary-btn">Cancel</button>
+                    <button id="confirmDeleteAccount" class="ws-danger-btn">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="ws-loading-overlay hidden">
+        <div class="ws-loading-spinner"></div>
+        <p id="loadingText">Loading...</p>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="ws-notification hidden"></div>
+
+    <!-- Scripts -->
+    <script src="/js/themes.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/workspace.js"></script>
+</body>
+</html>

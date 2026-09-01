@@ -1,0 +1,23 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Workspace — a unified landing for Dox (notes) and Grids (spreadsheets)",
+  "type": "module",
+  "scripts": {
+    "dev": "node server/dev-server.js",
+    "start": "node server/dev-server.js",
+    "build:dox": "cd dox-src && npm install && npm run build"
+  },
+  "keywords": [
+    "workspace",
+    "notes",
+    "spreadsheet",
+    "dox",
+    "grids"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

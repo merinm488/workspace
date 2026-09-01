@@ -1,0 +1,17 @@
+# Environment
+.env
+.env.local
+
+# Local development database
+db/
+
+# Dependencies
+node_modules/
+dox-src/node_modules/
+
+# Built Dox output (regenerate with: npm run build:dox)
+dox/
+
+# OS / editor noise
+.DS_Store
+.vercel

@@ -1,0 +1,1321 @@
+/* ============================================================
+   Workspace — Landing page styles
+   Dark (default) & Light themes, Grid & List views
+   ============================================================ */
+
+/* ---------- Theme variables ---------- */
+:root {
+    --bg: #0a0a0a;
+    --bg-elevated: #141414;
+    --bg-input: #1e1e1e;
+    --border: #2a2a2a;
+    --border-strong: #3a3a3a;
+    --text: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
+    --accent: #facc15;            /* Dox yellow — workspace accent */
+    --accent-text-on: #0a0a0a;
+    --accent-soft: rgba(250, 204, 21, 0.12);
+    --doc-accent: #4285f4;        /* Docs blue */
+    --doc-accent-soft: rgba(66, 133, 244, 0.15);
+    --grid-accent: #22c55e;       /* Grids green */
+    --grid-accent-soft: rgba(34, 197, 94, 0.15);
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.3);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+html[data-theme="light"] {
+    --bg: #ffffff;
+    --bg-elevated: #f7f7f5;
+    --bg-input: #f1f1ef;
+    --border: #e5e5e0;
+    --border-strong: #d4d4cc;
+    --text: #1a1a1a;
+    --text-secondary: #52525b;
+    --text-tertiary: #a1a1aa;
+    --accent: #eab308;
+    --accent-text-on: #ffffff;
+    --accent-soft: rgba(234, 179, 8, 0.14);
+    --danger: #dc2626;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- Reset-ish ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.2s ease, color 0.2s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+}
+
+input {
+    font-family: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ---------- Background decoration ---------- */
+.ws-background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.ws-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.07;
+}
+
+.ws-bg-circle-top-right {
+    width: 480px;
+    height: 480px;
+    top: -160px;
+    right: -120px;
+    background: var(--doc-accent);
+}
+
+.ws-bg-circle-bottom-left {
+    width: 420px;
+    height: 420px;
+    bottom: -140px;
+    left: -100px;
+    background: var(--grid-accent);
+}
+
+html[data-theme="light"] .ws-bg-circle {
+    opacity: 0.1;
+}
+
+/* ---------- Buttons ---------- */
+.ws-primary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--accent-text-on);
+    font-size: 14px;
+    font-weight: 600;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.ws-primary-btn:hover {
+    filter: brightness(1.08);
+}
+
+.ws-primary-btn:active {
+    transform: translateY(1px);
+}
+
+.ws-secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.15s ease;
+}
+
+.ws-secondary-btn:hover {
+    background: var(--bg-input);
+}
+
+.ws-danger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--danger);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+
+.ws-danger-btn:hover {
+    filter: brightness(1.1);
+}
+
+.ws-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ws-icon-btn:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+
+/* ---------- Login view ---------- */
+.ws-login-view {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.ws-login-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+}
+
+.ws-logo-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--accent);
+    color: var(--accent-text-on);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.ws-logo-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.ws-login-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.ws-login-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+}
+
+.ws-login-form {
+    text-align: left;
+}
+
+.ws-form-group {
+    margin-bottom: 16px;
+}
+
+.ws-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.ws-input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ws-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.ws-login-error {
+    font-size: 13px;
+    color: var(--danger);
+    margin-bottom: 12px;
+}
+
+.ws-login-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    margin-top: 4px;
+}
+
+.ws-btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: ws-spin 0.8s linear infinite;
+}
+
+@keyframes ws-spin {
+    to { transform: rotate(360deg); }
+}
+
+.ws-login-hint {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 16px;
+}
+
+.ws-login-theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.ws-login-theme-toggle:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+
+/* Stack both icons; CSS decides which is visible per theme */
+.ws-login-theme-toggle .sun-icon,
+.ws-login-theme-toggle .moon-icon {
+    position: absolute;
+    transition: opacity 0.2s ease;
+}
+
+html[data-theme="dark"] .ws-login-theme-toggle .sun-icon { opacity: 1; }
+html[data-theme="dark"] .ws-login-theme-toggle .moon-icon { opacity: 0; }
+html[data-theme="light"] .ws-login-theme-toggle .sun-icon { opacity: 0; }
+html[data-theme="light"] .ws-login-theme-toggle .moon-icon { opacity: 1; }
+
+/* ---------- Home view ---------- */
+.ws-home-view {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+.ws-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 24px 80px;
+}
+
+.ws-header {
+    padding: 8px 0 20px;
+}
+
+.ws-header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ws-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.ws-logo .ws-logo-icon {
+    margin: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+}
+
+.ws-logo .ws-logo-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ws-logo-text {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Search */
+.ws-search-container {
+    flex: 1;
+    min-width: 220px;
+    max-width: 520px;
+}
+
+.ws-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.ws-search-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.ws-search-input {
+    width: 100%;
+    padding: 11px 40px 11px 42px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ws-search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.ws-search-clear {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    color: var(--text-tertiary);
+}
+
+.ws-search-clear:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+
+/* Actions area */
+.ws-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+/* + New button */
+.ws-new-container {
+    position: relative;
+}
+
+.ws-new-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-text-on);
+    font-size: 14px;
+    font-weight: 600;
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ws-new-btn:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 4px 16px var(--accent-soft);
+}
+
+.ws-new-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.ws-new-caret {
+    transition: transform 0.2s ease;
+}
+
+.ws-new-container.active .ws-new-caret {
+    transform: rotate(180deg);
+}
+
+/* ---------- Dropdowns ---------- */
+.ws-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    max-width: calc(100vw - 24px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 6px;
+    z-index: 60;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+/* App menus grow with the registry — cap their height. (Scoped, because
+   overflow would clip the settings menu's theme flyout.) */
+#newDropdown,
+#emptyNewDropdown,
+#filterDropdown {
+    max-height: min(60vh, 420px);
+    overflow-y: auto;
+}
+
+.ws-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ws-dropdown-right {
+    left: auto;
+    right: 0;
+}
+
+/* Upward-opening variant (empty-state launcher) */
+.ws-dropdown-up {
+    top: auto;
+    bottom: calc(100% + 8px);
+    transform: translateY(6px);
+}
+
+.ws-dropdown-up.active {
+    transform: translateY(0);
+}
+
+/* Phones: menus become full-width sheets pinned to the viewport (12px
+   inset) via position:fixed — impossible to clip at any screen width or
+   system font size. workspace.js pins top/bottom to the trigger, caps the
+   height to the visible space, and repositions on resize. */
+@media (max-width: 480px) {
+    #newDropdown,
+    #emptyNewDropdown,
+    #filterDropdown,
+    #settingsDropdown {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: auto;
+        bottom: auto;
+        min-width: 0;
+        max-width: none;
+        overflow-y: auto;
+    }
+}
+
+.ws-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text);
+    text-align: left;
+    transition: background 0.12s ease;
+}
+
+.ws-dropdown-item:hover {
+    background: var(--accent-soft);
+}
+
+.ws-item-danger {
+    color: var(--danger);
+}
+
+.ws-item-danger:hover {
+    background: var(--danger-soft);
+}
+
+.ws-item-icon {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+}
+
+.ws-item-danger .ws-item-icon {
+    color: inherit;
+}
+
+.ws-item-text {
+    flex: 1;
+}
+
+.ws-app-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ws-app-icon-doc {
+    background: var(--doc-accent-soft);
+    color: var(--doc-accent);
+}
+
+.ws-app-icon-grid {
+    background: var(--grid-accent-soft);
+    color: var(--grid-accent);
+}
+
+.ws-dropdown-item-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ws-dropdown-item-title {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.ws-dropdown-item-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+/* Settings dropdown / theme submenu */
+.ws-settings-container,
+.ws-theme-container {
+    position: relative;
+}
+
+.ws-dropdown-arrow {
+    color: var(--text-tertiary);
+    transition: transform 0.2s ease;
+}
+
+.ws-theme-container.active .ws-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.ws-theme-submenu {
+    position: absolute;
+    top: 0;
+    right: calc(100% + 8px);
+    min-width: 150px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 6px;
+    z-index: 70;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(6px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.ws-theme-submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.ws-theme-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text);
+    transition: background 0.12s ease;
+}
+
+.ws-theme-option:hover,
+.ws-theme-option.active {
+    background: var(--accent-soft);
+}
+
+.ws-theme-option-icon {
+    color: var(--text-secondary);
+}
+
+/* ---------- Filter bar ---------- */
+.ws-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 6px 0 16px;
+}
+
+.ws-filters {
+    display: flex;
+    gap: 6px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 4px;
+    border-radius: 999px;
+}
+
+.ws-filter {
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ws-filter:hover {
+    color: var(--text);
+}
+
+.ws-filter.active {
+    background: var(--accent);
+    color: var(--accent-text-on);
+    font-weight: 600;
+}
+
+/* App chooser: one pill that opens a dropdown of all apps */
+.ws-filter-chooser {
+    position: relative;
+}
+
+.ws-filter-chooser-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+}
+
+.ws-filter-chooser-btn.app-selected {
+    background: var(--bg-input);
+    color: var(--text);
+    /* Tint is set inline from the app's --<accent>-accent vars so new apps
+       need no extra CSS. */
+}
+
+.ws-filter-chooser-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ws-filter-chooser-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.ws-filter-chooser.active .ws-new-caret {
+    transform: rotate(180deg);
+}
+
+/* Selected-app checkmark inside the filter dropdown */
+.ws-filter-check-slot {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+/* View toggle */
+.ws-view-toggle {
+    display: inline-flex;
+    gap: 4px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 4px;
+    border-radius: 999px;
+}
+
+.ws-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    color: var(--text-tertiary);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ws-view-btn:hover {
+    color: var(--text);
+}
+
+.ws-view-btn.active {
+    background: var(--accent);
+    color: var(--accent-text-on);
+}
+
+/* ---------- View title ---------- */
+.ws-view-indicator {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 0 14px;
+}
+
+.ws-view-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.ws-view-count {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.ws-search-hint {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+/* ---------- Files grid view ---------- */
+.ws-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.ws-file-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ws-file-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.ws-file-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ws-file-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ws-file-icon-doc {
+    background: var(--doc-accent-soft);
+    color: var(--doc-accent);
+}
+
+.ws-file-icon-grid {
+    background: var(--grid-accent-soft);
+    color: var(--grid-accent);
+}
+
+.ws-file-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.ws-file-card:hover .ws-file-actions,
+.ws-file-card:focus-within .ws-file-actions {
+    opacity: 1;
+}
+
+.ws-file-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: var(--text-tertiary);
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.ws-file-action-btn:hover {
+    background: var(--bg-input);
+    color: var(--text);
+}
+
+.ws-file-action-btn.danger:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.ws-file-title {
+    font-size: 15px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
+}
+
+.ws-file-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: auto;
+}
+
+.ws-file-app-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.ws-file-app-badge.doc {
+    background: var(--doc-accent-soft);
+    color: var(--doc-accent);
+}
+
+.ws-file-app-badge.grid {
+    background: var(--grid-accent-soft);
+    color: var(--grid-accent);
+}
+
+/* ---------- Files list view ---------- */
+.ws-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ws-file-row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ws-file-row:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-input);
+}
+
+.ws-file-row .ws-file-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.ws-file-row-main {
+    min-width: 0;
+}
+
+.ws-file-row-title {
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ws-file-row-meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.ws-file-row .ws-file-actions {
+    opacity: 0;
+}
+
+.ws-file-row:hover .ws-file-actions,
+.ws-file-row:focus-within .ws-file-actions {
+    opacity: 1;
+}
+
+/* ---------- Empty state ---------- */
+.ws-empty-state {
+    text-align: center;
+    padding: 70px 24px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+}
+
+.ws-empty-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 18px;
+    border-radius: 20px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.ws-empty-icon {
+    width: 34px;
+    height: 34px;
+}
+
+.ws-empty-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.ws-empty-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 22px;
+}
+
+.ws-empty-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Empty-state "+ New" launcher (dropdown opens upward) */
+.ws-empty-new-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ws-empty-new .ws-new-caret {
+    transition: transform 0.2s ease;
+}
+
+.ws-empty-new.active .ws-new-caret {
+    transform: rotate(180deg);
+}
+
+/* ---------- Modals ---------- */
+/* The scroll container IS the modal, so a dialog taller than the screen
+   (landscape phones, on-screen keyboards) scrolls instead of clipping its
+   top edge; margin:auto centers while there's room. */
+.ws-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, visibility 0.18s;
+}
+
+.ws-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ws-modal-content {
+    margin: auto;
+    width: 100%;
+    max-width: min(420px, 100%);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    transform: translateY(8px);
+    transition: transform 0.18s ease;
+}
+
+.ws-modal.active .ws-modal-content {
+    transform: translateY(0);
+}
+
+.ws-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.ws-modal-title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.ws-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ws-modal-close:hover {
+    background: var(--bg-input);
+    color: var(--text);
+}
+
+.ws-modal-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.ws-strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ws-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Key modal */
+.ws-key-display {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.ws-key-text {
+    flex: 1;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.ws-key-copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--accent-text-on);
+    transition: filter 0.15s ease;
+}
+
+.ws-key-copy-btn:hover {
+    filter: brightness(1.08);
+}
+
+.ws-key-feedback {
+    font-size: 12px;
+    color: var(--grid-accent);
+    height: 16px;
+    margin-bottom: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.ws-key-feedback.visible {
+    opacity: 1;
+}
+
+.ws-key-note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 18px;
+}
+
+.ws-key-close {
+    width: 100%;
+}
+
+/* ---------- Loading overlay ---------- */
+.ws-loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 200;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.ws-loading-spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--accent-soft);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: ws-spin 0.8s linear infinite;
+}
+
+/* ---------- Notification ---------- */
+.ws-notification {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 32px);
+    padding: 11px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    z-index: 300;
+}
+
+.ws-notification.success { background: var(--grid-accent); color: #052e16; }
+.ws-notification.error   { background: var(--danger); color: #fff; }
+.ws-notification.info    { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .ws-container {
+        padding: 14px 16px 70px;
+    }
+
+    .ws-header-content {
+        flex-wrap: wrap;
+    }
+
+    .ws-search-container {
+        order: 3;
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .ws-files-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    .ws-file-row {
+        grid-template-columns: 40px 1fr auto;
+    }
+
+    .ws-file-row-meta {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .ws-login-card {
+        padding: 32px 22px;
+    }
+
+    .ws-modal {
+        padding: 12px;
+    }
+
+    /* Theme submenu expands inline instead of flying out to the left of
+       the settings menu (which ran off-screen on phones). */
+    .ws-theme-submenu {
+        position: static;
+        display: none;
+        margin-top: 4px;
+        background: var(--bg-input);
+        box-shadow: none;
+        transform: none;
+        transition: none;
+    }
+
+    .ws-theme-submenu.active {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
+    .ws-new-text {
+        display: none; /* + icon only on small screens */
+    }
+
+    .ws-new-btn {
+        padding: 10px 12px;
+    }
+
+    .ws-filter {
+        padding: 7px 12px;
+    }
+}
