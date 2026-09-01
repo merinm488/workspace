@@ -69,8 +69,23 @@ function App() {
   } = useNotes(userHash);
 
   // Note detail view state - simplified from separate editing/viewing/creating states
-  const [activeNote, setActiveNote] = useState(null); // { id, mode: 'view' | 'edit' | 'create' }
-  const [isNoteViewOpen, setIsNoteViewOpen] = useState(false);
+  // Workspace deep links (?note=<id>) open the note on the very first paint:
+  // view links start the preview immediately from a stub { id } (real
+  // title/content fill in once the notes fetch resolves), so the state is
+  // parsed synchronously here rather than in an effect (effects run after
+  // the first paint and would flash the home page for a frame).
+  const [activeNote, setActiveNote] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('note');
+    if (id && params.get('edit') !== '1') {
+      return { id, mode: 'view', note: { id }, isStub: true };
+    }
+    return null; // { id, mode: 'view' | 'edit' | 'create', note?, isStub? }
+  });
+  const [isNoteViewOpen, setIsNoteViewOpen] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return Boolean(params.get('note')) && params.get('edit') !== '1';
+  });
 
   // Share state
   const [sharingNote, setSharingNote] = useState(null);
@@ -128,13 +143,14 @@ function App() {
     }
   }, []);
 
-  // Workspace deep link: /dox/?note=<id> opens that note. &edit=1 (sent when
-  // the file was just created) opens it straight into the editor on the very
-  // first paint — no home-page or login flash in between. The note already
-  // exists server-side (the workspace creates it before redirecting here),
-  // so edit mode can start from a stub { id } with empty title/content.
-  // View links (no &edit=1) wait for the notes fetch so the real content is
-  // there when the preview opens.
+  // Workspace deep links: /dox/?note=<id> opens that note on the very first
+  // paint — no home-page or login flash in between. &edit=1 (sent when the
+  // file was just created) opens the editor; without it the preview opens.
+  // Both start from a stub { id }: the note already exists server-side (the
+  // workspace created it before redirecting / it was fetched when the file
+  // was listed), and edit mode only needs the id to save. The preview fills
+  // in the real title/content as soon as the notes fetch resolves (see the
+  // stub fill-in effect below).
   const [pendingNoteLink] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('note');
@@ -153,18 +169,24 @@ function App() {
       // (auto-save targets it); title/content start empty like a fresh note.
       setEditLinkNote({ id: pendingNoteLink.id });
     }
+    // View links are already opened synchronously by the useState
+    // initializers above.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fill in a stubbed deep-link note once the notes fetch has resolved.
+  // A note that no longer exists (deleted / bad link) closes the view and
+  // falls through to the normal app.
   useEffect(() => {
-    // View-mode deep links wait for the real note to arrive
-    if (!pendingNoteLink || pendingNoteLink.edit || !hasLoaded) return;
-    const note = notes.find(n => n.id === pendingNoteLink.id);
+    if (!isNoteViewOpen || !activeNote?.isStub || !hasLoaded) return;
+    const note = notes.find(n => n.id === activeNote.id);
     if (note) {
-      handleNoteClick(note, 'view');
+      setActiveNote({ id: note.id, mode: activeNote.mode, note });
+    } else {
+      setIsNoteViewOpen(false);
+      setActiveNote(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingNoteLink, notes, hasLoaded]);
+  }, [isNoteViewOpen, activeNote, notes, hasLoaded]);
 
   /**
    * Fetch shared note by ID
@@ -718,13 +740,12 @@ function App() {
       </div>
 
       {/* ===== NOTE DETAIL VIEW ===== */}
-      {(isNoteViewOpen || editLinkNote) && (
+      {(editLinkNote || (isNoteViewOpen && activeNote)) && (
         <NoteDetailView
           note={editLinkNote
             ? editLinkNote
             : (activeNote.mode === 'create' ? null : activeNote.note)}
-          initialMode={editLinkNote
-            ? 'edit'
+          initialMode={editLinkNote ? 'edit'
             : (activeNote.mode === 'create' ? 'edit' : activeNote.mode)}
           tags={tags}
           userHash={userHash}

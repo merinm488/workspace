@@ -78,6 +78,26 @@ export function NoteDetailView({
         tagId: note.tagId || activeTag || null
       });
       setSaveStatus('saved');
+
+      // Deep links open the view from a stub { id } before the notes fetch
+      // resolves, so the real title/content/tag arrive as a prop update
+      // after mount — adopt them into local state here (state initializers
+      // only ran once, against the stub). In view mode there are no user
+      // edits to overwrite; in edit mode only fill fields the user hasn't
+      // touched yet (title untouched, content still empty).
+      if (mode === 'view') {
+        setTitle(note.title || '');
+        setContent(getContent(note.content, note.contentType));
+        setTagId(note.tagId || activeTag || null);
+      } else if (!title) {
+        setTitle(note.title || '');
+        if (!content) {
+          setContent(getContent(note.content, note.contentType));
+        }
+        if (!tagId) {
+          setTagId(note.tagId || activeTag || null);
+        }
+      }
     }
   }, [note?.id, note?.title, note?.content, note?.contentType, note?.tagId, activeTag]);
 
