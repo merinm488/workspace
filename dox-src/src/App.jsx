@@ -3,6 +3,7 @@ import { useAuth } from './hooks/useAuth';
 import { useNotes } from './hooks/useNotes';
 import { useTheme } from './hooks/useTheme';
 import { Login } from './components/Login';
+import { SplashScreen } from './components/SplashScreen';
 import { ThemeToggle } from './components/ThemeToggle';
 import { UserDisplay } from './components/UserDisplay';
 import { TagList } from './components/TagList';
@@ -31,6 +32,7 @@ function App() {
     userHash,
     isAuthenticated,
     isLoading: authLoading,
+    isCheckingSession,
     error: authError,
     errorCode,
     login,
@@ -151,8 +153,11 @@ function App() {
     const note = notes.find(n => n.id === pendingNoteLink.id);
     if (note) {
       handleNoteClick(note, pendingNoteLink.edit ? 'edit' : 'view');
-      setPendingNoteLink(null);
     }
+    // Found or not, the link is resolved: opening the note shows the editor
+    // over the app; a missing note (deleted / bad link) just falls through to
+    // the normal app instead of sitting on the splash forever.
+    setPendingNoteLink(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingNoteLink, notes, isLoading]);
 
@@ -273,6 +278,16 @@ function App() {
     setIsNoteViewOpen(false);
     setActiveNote(null);
   }, []);
+
+  // ===== SPLASH — session check / workspace deep link still settling =====
+  // Covers the gap where a returning user (or a /dox/?note= deep link) would
+  // otherwise see the login screen or the notes list flash by for a split
+  // second before the real destination renders. Without a session the check
+  // completes immediately and the login screen shows as before.
+  if (isCheckingSession || (pendingNoteLink && isAuthenticated)) {
+    const splashEffectiveTheme = getEffectiveTheme();
+    return <SplashScreen dark={splashEffectiveTheme === 'dark'} />;
+  }
 
   // ===== SHARED NOTE VIEW - Works without login =====
   if (sharedNote !== null) {

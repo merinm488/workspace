@@ -9,6 +9,9 @@ export function useAuth() {
   const [userHash, setUserHash] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // True until the initial session check completes, so the app can show a
+  // splash instead of flashing the login screen for returning users.
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [error, setError] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
 
@@ -196,17 +199,19 @@ export function useAuth() {
   const checkSession = useCallback(async () => {
     // Fall back to legacy key so existing sessions survive the rename
     const savedHash = sessionStorage.getItem('dox_hash') || sessionStorage.getItem('secure_notes_hash');
-    if (savedHash) {
-      try {
+    try {
+      if (savedHash) {
         const response = await fetch(`/api/notes?hash=${encodeURIComponent(savedHash)}`);
         if (response.ok) {
           setUserHash(savedHash);
           setIsAuthenticated(true);
           return true;
         }
-      } catch (error) {
-        console.error('Session check failed:', error);
       }
+    } catch (error) {
+      console.error('Session check failed:', error);
+    } finally {
+      setIsCheckingSession(false);
     }
     return false;
   }, []);
@@ -223,6 +228,7 @@ export function useAuth() {
     userHash,
     isAuthenticated,
     isLoading,
+    isCheckingSession,
     error,
     errorCode,
     login,
