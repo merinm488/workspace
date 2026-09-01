@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node server/dev-server.js",
     "start": "node server/dev-server.js",
-    "build:dox": "cd dox-src && npm install && npm run build"
+    "build:dox": "cd dox-src && npm install && npm run build",
+    "build": "npm run build:dox && node scripts/build-dist.mjs",
+    "postinstall": "cd dox-src && npm install"
   },
   "keywords": [
     "workspace",

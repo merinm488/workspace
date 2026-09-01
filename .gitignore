@@ -12,6 +12,10 @@ dox-src/node_modules/
 # Built Dox output (regenerate with: npm run build:dox)
 dox/
 
+# Unified deployment output (regenerate with: npm run build)
+dist/
+
 # OS / editor noise
 .DS_Store
 .vercel
+.env*
