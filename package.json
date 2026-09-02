@@ -1,7 +1,7 @@
 {
   "name": "workspace",
   "version": "1.0.0",
-  "description": "Workspace — a unified landing for Dox (notes) and Grids (spreadsheets)",
+  "description": "Workspace — a unified landing to access daily tools",
   "type": "module",
   "scripts": {
     "dev": "node server/dev-server.js",
