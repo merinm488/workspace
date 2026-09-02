@@ -316,14 +316,40 @@ export async function deleteSharedDoc(shareId) {
 // Request helpers
 // ================================================
 
+/**
+ * Read a request header regardless of whether the handler received a Web
+ * fetch `Request` (a `Headers` instance, as used by api/notes.js) or an
+ * Express/Vercel `req` (a plain object, as used by api/users.js). Bracket
+ * access on a Headers instance always yields undefined, which is how
+ * `https://localhost` ended up in production share links.
+ */
+function readHeader(headers, name) {
+  if (!headers) return undefined;
+  if (typeof headers.get === 'function') {
+    const value = headers.get(name);
+    return value === null ? undefined : value;
+  }
+  return headers[name];
+}
+
+/** First entry of a possibly comma-separated header value. */
+function firstHeaderValue(value) {
+  if (!value) return undefined;
+  return String(value).split(',')[0].trim() || undefined;
+}
+
 /** Build the deployment base URL from request headers. */
 export function getBaseUrl(req) {
+  const headers = req && req.headers;
   if (IS_DEVELOPMENT) {
-    const host = req.headers['host'] || 'localhost:4000';
+    const host = firstHeaderValue(readHeader(headers, 'host')) || 'localhost:4000';
     return `http://${host}`;
   }
-  const protocol = req.headers['x-forwarded-proto'] || 'https';
-  const host = req.headers['host'] || req.headers['x-vercel-forwarded-for'] || 'localhost';
+  const protocol = firstHeaderValue(readHeader(headers, 'x-forwarded-proto')) || 'https';
+  const host =
+    firstHeaderValue(readHeader(headers, 'host')) ||
+    firstHeaderValue(readHeader(headers, 'x-forwarded-host')) ||
+    'localhost';
   return `${protocol}://${host}`;
 }
 
