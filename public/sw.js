@@ -10,10 +10,12 @@
  * Strategy:
  *   - /api/*                    -> network only, never cached
  *   - navigation requests       -> network first, cache fallback (offline shell)
- *   - static assets (js/css/png)-> cache first, refresh in background
+ *   - static assets (js/css/png)-> network first, cache fallback (offline);
+ *                                 assets are unversioned, so serving cache
+ *                                 first would pin stale files after a deploy
  */
 
-const VERSION = 'workdeck-v2';
+const VERSION = 'workdeck-v3';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
@@ -42,9 +44,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(
+        // Delete every cache that isn't the current version's — including
+        // leftovers from the old 'workspace-v1' worker, which this filter
+        // previously let survive and kept serving stale assets.
         keys
-          // Only clean up caches this worker version owns.
-          .filter((key) => key.startsWith('workdeck-') && key !== STATIC_CACHE && key !== RUNTIME_CACHE)
+          .filter((key) => key !== STATIC_CACHE && key !== RUNTIME_CACHE)
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
@@ -79,20 +83,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache first, refresh in the background.
+  // Static assets: network first, falling back to cache when offline.
+  // Assets are unversioned, so cache-first would keep serving pre-rename
+  // files after a deploy and break the app (mixed old/new JS globals).
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const fetchPromise = fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, responseToCache));
-          }
-          return networkResponse;
-        })
-        .catch(() => cachedResponse);
-
-      return cachedResponse || fetchPromise;
-    })
+    fetch(request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, responseToCache));
+        }
+        return networkResponse;
+      })
+      .catch(() => caches.match(request))
   );
 });
