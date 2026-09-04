@@ -101,6 +101,10 @@ class SheetsApp {
                 }
             }
 
+            // Clean the address bar like Docs does: the deep link (?id=...)
+            // has been consumed, so show the bare /sheets/ URL.
+            this.cleanURL();
+
             this.isInitialized = true;
             return true;
         } catch (error) {
@@ -569,13 +573,16 @@ class SheetsApp {
     }
 
     /**
-     * Check whether the current spreadsheet still has its default name
-     * @returns {boolean} True if the name is empty or 'Untitled Spreadsheet'
+     * Check whether the current spreadsheet still has its default name.
+     * Covers every untitled variant in circulation: the Sheets home page
+     * creates 'Untitled Spreadsheet', the Workdeck API creates 'Untitled
+     * Sheet', and the editor falls back to 'Untitled'.
+     * @returns {boolean} True if the name is empty or a default untitled name
      */
     isUntitledSpreadsheet() {
         const titleElement = document.getElementById('spreadsheetTitle');
-        const currentName = titleElement ? titleElement.textContent.trim() : '';
-        return !currentName || currentName.toLowerCase() === 'untitled' || currentName.toLowerCase() === 'untitled spreadsheet';
+        const currentName = titleElement ? titleElement.textContent.trim().toLowerCase() : '';
+        return !currentName || currentName === 'untitled' || currentName === 'untitled spreadsheet' || currentName === 'untitled sheet';
     }
 
     /**
@@ -1092,6 +1099,17 @@ class SheetsApp {
      */
     updateURL(id) {
         window.history.pushState(null, '', `?id=${id}`);
+    }
+
+    /**
+     * Strip the query string from the URL once the deep link has been
+     * consumed (like the Docs app does), leaving the bare editor URL.
+     * @returns {void}
+     */
+    cleanURL() {
+        if (window.location.search) {
+            window.history.replaceState(null, '', window.location.pathname);
+        }
     }
 
     /**
