@@ -457,6 +457,10 @@ class SheetsApp {
             const success = await spreadsheetManager.saveSpreadsheetMetadata(spreadsheetData);
 
             if (success) {
+                // Reflect the new name in the editor header right away —
+                // otherwise it keeps showing the old title until the user
+                // goes back to the home page.
+                this.updateSpreadsheetTitle(newTitle);
                 this.showNotification('Spreadsheet renamed successfully', 'success');
             } else {
                 this.showError('Failed to rename spreadsheet');
