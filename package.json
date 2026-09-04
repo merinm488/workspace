@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server/dev-server.js",
     "start": "node server/dev-server.js",
-    "build:docs": "cd docs-src && npm install && npm run build",
+    "build:docs": "cd docs-src && npm run build",
     "build": "npm run build:docs && node scripts/build-dist.mjs",
     "postinstall": "cd docs-src && npm install"
   },
