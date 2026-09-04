@@ -65,7 +65,7 @@ class SharedSpreadsheet {
                 return;
             }
 
-            this.spreadsheetData = result.spreadsheet;
+            this.spreadsheetData = result.sheet;
 
             // Update the page title with the actual spreadsheet name
             this.updatePageTitle();
