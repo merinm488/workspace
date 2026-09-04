@@ -1,7 +1,7 @@
 {
-  "name": "Workspace",
-  "short_name": "Workspace",
-  "description": "Workspace — your unified home for Dox documents and Grids spreadsheets.",
+  "name": "Workdeck",
+  "short_name": "Workdeck",
+  "description": "Workdeck — your unified home for Docs documents and Sheets spreadsheets.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

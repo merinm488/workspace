@@ -1,8 +1,8 @@
 /**
- * Workspace PWA registration.
+ * Workdeck PWA registration.
  *
- * Registers the Workspace service worker at '/' scope and keeps the
- * theme-color meta tag in sync with the active theme. Dox and Grids manage
+ * Registers the Workdeck service worker at '/' scope and keeps the
+ * theme-color meta tag in sync with the active theme. Docs and Sheets manage
  * their own PWAs separately.
  */
 (function () {

@@ -1,0 +1,1274 @@
+/* ================================================
+   SHEETS - Home Page Styles
+   ================================================ */
+
+/* Professional Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-color);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+*:hover {
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+/* ================================================
+   Background Decoration
+   ================================================ */
+
+.home-background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.home-bg-circle {
+    position: absolute;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.05;
+    background: linear-gradient(135deg, var(--accent-color), #16a34a);
+}
+
+.home-bg-circle-top-right {
+    top: -10rem;
+    right: -10rem;
+}
+
+.home-bg-circle-bottom-left {
+    bottom: -10rem;
+    left: -10rem;
+}
+
+/* ================================================
+   Layout Container
+   ================================================ */
+
+.home-container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    z-index: 1;
+}
+
+.home-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+}
+
+/* ================================================
+   Header
+   ================================================ */
+
+.home-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .home-header {
+    background-color: var(--bg-secondary);
+}
+
+.home-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+/* ================================================
+   Logo
+   ================================================ */
+
+.home-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.home-logo-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.home-logo-svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .home-logo-icon {
+    background: color-mix(in srgb, white 10%, transparent);
+}
+
+[data-theme="dark"] .home-logo-svg {
+    color: white;
+}
+
+.home-logo-text {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+/* ================================================
+   Search Bar
+   ================================================ */
+
+.home-search-container {
+    flex: 1;
+    max-width: 28rem;
+    min-width: 0;
+}
+
+.home-search-wrapper {
+    position: relative;
+}
+
+.home-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.home-search-input {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.home-search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.home-search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.home-search-clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.home-search-clear:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.home-search-clear svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+}
+
+/* ================================================
+   Actions
+   ================================================ */
+
+.home-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Settings Container - Uses shared styles from styles.css */
+.top-nav-settings {
+    position: relative;
+}
+
+/* Settings Button - Shared with spreadsheet editor */
+.top-nav-btn {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-nav-btn:hover {
+    background-color: var(--accent-light);
+}
+
+.top-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.top-nav-icon {
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+}
+
+.top-nav-btn:hover .top-nav-icon {
+    color: var(--accent-color);
+}
+
+.home-create-btn {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.home-create-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.home-create-btn:active {
+    transform: translateY(0);
+}
+
+.home-create-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.home-create-text {
+    white-space: nowrap;
+}
+
+/* ================================================
+   View Indicator
+   ================================================ */
+
+.home-view-indicator {
+    padding: 0.75rem 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: color-mix(in srgb, var(--bg-tertiary) 50%, var(--bg-primary));
+}
+
+.home-view-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+/* ================================================
+   Spreadsheets Grid
+   ================================================ */
+
+.home-spreadsheets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Spreadsheet Card */
+.spreadsheet-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.spreadsheet-card:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.spreadsheet-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), #16a34a);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.spreadsheet-card:hover::before {
+    opacity: 1;
+}
+
+/* Spreadsheet Card Header */
+.spreadsheet-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.spreadsheet-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, var(--accent-color), #16a34a);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.spreadsheet-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.spreadsheet-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+}
+
+/* Spreadsheet Card Actions */
+.spreadsheet-card-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.spreadsheet-card:hover .spreadsheet-card-actions {
+    opacity: 1;
+}
+
+.spreadsheet-action-btn {
+    padding: 0.375rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spreadsheet-action-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-color);
+}
+
+.spreadsheet-action-btn.delete:hover {
+    background-color: color-mix(in srgb, #dc2626 10%, transparent);
+    color: #dc2626;
+}
+
+.spreadsheet-action-btn svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Spreadsheet Card Info */
+.spreadsheet-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.spreadsheet-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spreadsheet-meta svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   Empty State
+   ================================================ */
+
+.home-empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    text-align: center;
+}
+
+.home-empty-state:not(.hidden) {
+    display: flex;
+}
+
+.home-empty-icon-wrapper {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--bg-tertiary) 30%, var(--bg-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.home-empty-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--text-secondary);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.home-empty-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.home-empty-description {
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+}
+
+/* ================================================
+   Delete Modal Buttons
+   ================================================ */
+
+.home-cancel-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 500;
+}
+
+.home-cancel-btn:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.home-confirm-delete-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.home-confirm-delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+.home-confirm-rename-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 500;
+}
+
+.home-confirm-rename-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Rename Modal Input Styles */
+#renameInput {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin-bottom: 1rem;
+}
+
+#renameInput:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+#renameInput::placeholder {
+    color: var(--text-secondary);
+}
+
+/* Additional utility styles for modals */
+.label-text {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+/* Utility classes */
+.block {
+    display: block;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.border-gray-300 {
+    border-color: var(--border-color);
+}
+
+.dark\:border-gray-600:has(*)) {
+    /* Already handled by CSS variables */
+}
+
+.bg-gray-50 {
+    background-color: var(--bg-tertiary);
+}
+
+.dark\:bg-gray-700:has(*)) {
+    /* Already handled by CSS variables */
+}
+
+.text-gray-900 {
+    color: var(--text-primary);
+}
+
+.dark\:text-gray-100:has(*)) {
+    /* Already handled by CSS variables */
+}
+
+.focus\:outline-none:focus {
+    outline: none;
+}
+
+.focus\:ring-2:focus {
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.focus\:ring-green-500:focus {
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.text-gray-600 {
+    color: var(--text-secondary);
+}
+
+.dark .text-gray-600 {
+    color: var(--text-secondary);
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+/* ================================================
+   Notification Styles
+   ================================================ */
+
+#notification {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    z-index: 10001;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#notification.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(1rem);
+}
+
+#notification.success {
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+#notification.error {
+    background-color: color-mix(in srgb, #dc2626 10%, transparent);
+    color: #dc2626;
+    border: 1px solid #dc2626;
+}
+
+/* ================================================
+   Responsive Design
+   ================================================ */
+
+@media (max-width: 640px) {
+    .home-header-content {
+        flex-wrap: wrap;
+    }
+
+    .home-search-container {
+        order: 3;
+        min-width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .home-spreadsheets-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-create-text {
+        display: none;
+    }
+
+    .spreadsheet-card-actions {
+        opacity: 1;
+    }
+
+    /* Ensure solid background on mobile for settings dropdown */
+    .settings-dropdown {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        border: 1px solid #e5e5e5 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        position: absolute !important;
+        z-index: 99999 !important;
+    }
+
+    .settings-dropdown.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Ensure solid background for theme submenu */
+    .theme-submenu {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        border: 1px solid #e5e5e5 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        position: absolute !important;
+        z-index: 100000 !important;
+    }
+
+    .theme-submenu.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Dark theme overrides */
+    [data-theme="dark"] .settings-dropdown {
+        background-color: #1a1a1a !important;
+        background: #1a1a1a !important;
+        border-color: #2a2a2a !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    [data-theme="dark"] .theme-submenu {
+        background-color: #1a1a1a !important;
+        background: #1a1a1a !important;
+        border-color: #2a2a2a !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Ensure dropdown items have proper contrast */
+    .settings-dropdown-item {
+        background-color: transparent !important;
+    }
+
+    [data-theme="dark"] .settings-dropdown-item {
+        color: #e5e5e5 !important;
+    }
+
+    [data-theme="light"] .settings-dropdown-item {
+        color: #1a1a1a !important;
+    }
+
+    /* Ensure theme options have proper contrast */
+    .theme-option {
+        background-color: transparent !important;
+    }
+
+    [data-theme="dark"] .theme-option {
+        color: #e5e5e5 !important;
+    }
+
+    [data-theme="light"] .theme-option {
+        color: #1a1a1a !important;
+    }
+
+    /* Ensure dropdown items have proper hover states */
+    [data-theme="dark"] .settings-dropdown-item:hover {
+        background-color: #14532d !important;
+        color: #22c55e !important;
+    }
+
+    [data-theme="light"] .settings-dropdown-item:hover {
+        background-color: #dcfce7 !important;
+        color: #22c55e !important;
+    }
+
+    /* Ensure theme options have proper hover states */
+    [data-theme="dark"] .theme-option:hover {
+        background-color: #14532d !important;
+        color: #22c55e !important;
+    }
+
+    [data-theme="light"] .theme-option:hover {
+        background-color: #dcfce7 !important;
+        color: #22c55e !important;
+    }
+
+    /* Mobile: position theme submenu below parent instead of to the right */
+    .theme-submenu {
+        top: 100% !important;
+        right: auto !important;
+        left: 0 !important;
+        margin-right: 0 !important;
+        margin-top: 4px !important;
+        transform: translateY(10px) !important;
+    }
+
+    .theme-submenu.active {
+        transform: translateY(0) !important;
+    }
+
+    /* Ensure dropdown items have solid backgrounds */
+    .settings-dropdown-item {
+        background-color: #ffffff !important;
+        color: #1a1a1a !important;
+    }
+
+    [data-theme="dark"] .settings-dropdown-item {
+        background-color: #1a1a1a !important;
+        color: #e5e5e5 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .home-spreadsheets-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .home-spreadsheets-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .home-spreadsheets-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ================================================
+   Key Info Modal
+   ================================================ */
+
+.key-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Adjust modal background for dark theme */
+[data-theme="dark"] .key-modal {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.key-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.key-modal-content {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure dark theme colors apply properly */
+[data-theme="dark"] .key-modal-content {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    box-shadow: 0 8px 24px var(--shadow-color);
+}
+
+.key-modal.active .key-modal-content {
+    transform: scale(1);
+}
+
+.key-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.key-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Ensure title color reflects theme */
+[data-theme="dark"] .key-modal-title {
+    color: var(--text-primary);
+}
+
+.key-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.key-modal-close:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.key-modal-body {
+    color: var(--text-primary);
+}
+
+.key-display-container {
+    margin-bottom: 20px;
+}
+
+.key-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+/* Ensure dark theme colors apply properly */
+[data-theme="dark"] .key-display {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.key-text {
+    flex: 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    word-break: break-all;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.key-copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.key-copy-btn:hover {
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+}
+
+.key-copy-btn:active {
+    transform: scale(0.95);
+}
+
+/* Ensure copy button reflects theme */
+[data-theme="dark"] .key-copy-btn {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .key-copy-btn:hover {
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+}
+
+.key-copy-feedback {
+    font-size: 13px;
+    color: var(--accent-color);
+    text-align: center;
+    min-height: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: 500;
+    margin: 0;
+}
+
+.key-copy-feedback.visible {
+    opacity: 1;
+}
+
+.key-modal-close-btn {
+    width: 100%;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.key-modal-close-btn:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Ensure dark theme colors apply properly */
+[data-theme="dark"] .key-modal-close-btn {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .key-modal-close-btn:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* ================================================
+   Delete Modal Content
+   ================================================ */
+
+#deleteModal .key-modal-content {
+    max-width: 400px;
+}
+
+/* ================================================
+   Delete Account Modal Styles
+   ================================================ */
+
+#deleteAccountModal .key-modal-content {
+    max-width: 450px;
+}
+
+#deleteAccountModal .key-modal-body p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#deleteAccountModal .key-modal-body ul {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+}
+
+#deleteAccountModal .key-modal-body ul li {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.home-cancel-btn {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.home-cancel-btn:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .home-cancel-btn {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .home-cancel-btn:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.home-confirm-delete-btn {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.home-confirm-delete-btn:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.home-confirm-delete-btn:active {
+    transform: translateY(0);
+}
+
+.home-confirm-delete-account-btn {
+    background-color: #dc2626;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.home-confirm-delete-account-btn:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.home-confirm-delete-account-btn:active {
+    transform: translateY(0);
+}
+
+/* ================================================
+   Text Color Utilities for Delete Account
+   ================================================ */
+
+.text-red-600 {
+    color: #dc2626;
+}
+
+[data-theme="dark"] .text-red-600 {
+    color: #ef4444;
+}
+
+.dark\:text-red-400 {
+    color: #f87171;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+[data-theme="dark"] .text-gray-600 {
+    color: #9ca3af;
+}
+
+.dark\:text-gray-400 {
+    color: #9ca3af;
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+.list-disc {
+    list-style-type: disc;
+}
+
+.pl-5 {
+    padding-left: 20px;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.flex {
+    display: flex;
+}
+
+.gap-3 {
+    gap: 12px;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+/* ================================================
+   Utility Classes
+   ================================================ */
+
+.hidden {
+    display: none !important;
+}

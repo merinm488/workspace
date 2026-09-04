@@ -7,10 +7,10 @@ db/
 
 # Dependencies
 node_modules/
-dox-src/node_modules/
+docs-src/node_modules/
 
-# Built Dox output (regenerate with: npm run build:dox)
-dox/
+# Built Docs output (regenerate with: npm run build:docs)
+docs/
 
 # Unified deployment output (regenerate with: npm run build)
 dist/

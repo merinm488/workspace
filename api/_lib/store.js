@@ -1,9 +1,9 @@
 /**
  * ================================================
- * Shared Storage Layer (Workspace / Dox / Grids)
+ * Shared Storage Layer (Workdeck / Docs / Sheets)
  * ================================================
  *
- * All three API routes (/api/workspace, /api/notes, /api/users) share this
+ * All three API routes (/api/workdeck, /api/docs, /api/users) share this
  * module so that they operate on the SAME document per user, in both
  * environments:
  *
@@ -13,15 +13,15 @@
  * The unified document shape is:
  *
  *   {
- *     notes:        [ ...dox notes... ],
- *     tags:         [ ...dox tags... ],
- *     spreadsheets: [ ...grids sheets... ],
+ *     docs:        [ ...docs... ],
+ *     tags:        [ ...tags... ],
+ *     sheets:       [ ...sheets... ],
  *     settings:     { theme, viewMode, lastOpened, createdAt, ... }
  *   }
  *
  * Each app only "owns" its own section(s). saveOwnedSections() merges writes
  * at the section level (settings merge at the key level) so that, for
- * example, a note save from Dox never wipes a user's spreadsheets.
+ * example, a doc save from Docs never wipes a user's sheets.
  *
  * Environment detection mirrors the original projects:
  * - NODE_ENV === 'development' -> local files
@@ -47,7 +47,7 @@ const TEXTDB_API_BASE = 'https://textdb.dev/api/data';
 // ================================================
 
 /**
- * Generate SHA-256 hash with pepper (same scheme as the original Dox & Grids
+ * Generate SHA-256 hash with pepper (same scheme as the original Docs & Sheets
  * projects: sha256(key.trim() + PEPPER_SECRET) as hex).
  */
 export function generateHash(input) {
@@ -152,7 +152,7 @@ async function postTextdbDoc(id, value) {
 // User documents
 // ================================================
 
-const KNOWN_SECTIONS = ['notes', 'tags', 'spreadsheets', 'settings'];
+const KNOWN_SECTIONS = ['docs', 'tags', 'sheets', 'settings'];
 
 /** A stored doc counts as an existing account if it has any known section. */
 export function isValidUserDoc(doc) {
@@ -179,9 +179,9 @@ export async function getUserDoc(hash) {
 
   if (!isValidUserDoc(doc)) return null;
 
-  if (!Array.isArray(doc.notes)) doc.notes = [];
+  if (!Array.isArray(doc.docs)) doc.docs = [];
   if (!Array.isArray(doc.tags)) doc.tags = [];
-  if (!Array.isArray(doc.spreadsheets)) doc.spreadsheets = [];
+  if (!Array.isArray(doc.sheets)) doc.sheets = [];
   if (!doc.settings || typeof doc.settings !== 'object') doc.settings = {};
 
   return doc;
@@ -202,12 +202,12 @@ export async function overwriteDoc(hash, doc) {
 
 /**
  * Save only the sections the caller owns, merging over whatever else is
- * stored. `owned.settings` is merged at the key level so that Dox (theme) and
- * Workspace (theme, viewMode, lastOpened) can share one settings object
+ * stored. `owned.settings` is merged at the key level so that Docs (theme) and
+ * Workdeck (theme, viewMode, lastOpened) can share one settings object
  * without clobbering each other.
  *
  * @param {string} hash
- * @param {{notes?:Array, tags?:Array, spreadsheets?:Array, settings?:Object}} owned
+ * @param {{docs?:Array, tags?:Array, sheets?:Array, settings?:Object}} owned
  * @returns {Promise<boolean>}
  */
 export async function saveOwnedSections(hash, owned) {
@@ -220,7 +220,7 @@ export async function saveOwnedSections(hash, owned) {
 
   const next = existing && typeof existing === 'object' && !Array.isArray(existing) ? existing : {};
 
-  for (const key of ['notes', 'tags', 'spreadsheets']) {
+  for (const key of ['docs', 'tags', 'sheets']) {
     if (owned[key] !== undefined) next[key] = owned[key];
   }
 
@@ -237,9 +237,9 @@ export async function createUserDoc(hash, defaults = {}) {
   if (existing) return { ok: false, code: 'USER_EXISTS' };
 
   const doc = {
-    notes: [],
+    docs: [],
     tags: [],
-    spreadsheets: [],
+    sheets: [],
     settings: {
       theme: 'dark',
       viewMode: 'grid',
@@ -318,7 +318,7 @@ export async function deleteSharedDoc(shareId) {
 
 /**
  * Read a request header regardless of whether the handler received a Web
- * fetch `Request` (a `Headers` instance, as used by api/notes.js) or an
+ * fetch `Request` (a `Headers` instance, as used by api/docs.js) or an
  * Express/Vercel `req` (a plain object, as used by api/users.js). Bracket
  * access on a Headers instance always yields undefined, which is how
  * `https://localhost` ended up in production share links.

@@ -1,14 +1,14 @@
 /**
  * ================================================
- * GRIDS - Unified User API (workspace version)
+ * SHEETS - Unified User API (Workdeck version)
  * ================================================
  *
- * Port of the original Grids app's api/users.js with the same two changes as
- * api/notes.js: shared storage (local files in dev, textdb.dev in prod) and
- * section-merged saves so spreadsheet writes never wipe notes.
+ * Port of the original Sheets app's api/users.js with the same two changes as
+ * api/docs.js: shared storage (local files in dev, textdb.dev in prod) and
+ * section-merged saves so sheet writes never wipe docs.
  *
  * Request/response shapes are identical to the original, so the existing
- * Grids frontend (js/storage.js, js/auth.js) works unchanged.
+ * Sheets frontend (js/storage.js, js/auth.js) works unchanged.
  */
 
 import {
@@ -25,10 +25,10 @@ import {
   applyCorsHeaders
 } from './_lib/store.js';
 
-/** Persist only the sections Grids owns (spreadsheets) + settings changes. */
-async function saveGridsSections(hash, userData) {
+/** Persist only the sections Sheets owns (sheets) + settings changes. */
+async function saveSheetsSections(hash, userData) {
   return saveOwnedSections(hash, {
-    spreadsheets: userData.spreadsheets,
+    sheets: userData.sheets,
     settings: userData.settings
   });
 }
@@ -47,25 +47,25 @@ export default async function handler(req, res) {
 
   try {
     // ============================================================
-    // GET - Retrieve user data or shared spreadsheet
+    // GET - Retrieve user data or shared sheet
     // ============================================================
     if (req.method === 'GET') {
       const { hash, shared } = req.query;
 
       if (shared) {
-        console.log(`[API] GET fetching shared spreadsheet: ${shared}`);
+        console.log(`[API] GET fetching shared sheet: ${shared}`);
         const doc = await getSharedDoc(shared);
 
-        if (!doc || !doc.spreadsheet) {
+        if (!doc || !doc.sheet) {
           return res.status(404).json({
             success: false,
-            error: 'Shared spreadsheet not found'
+            error: 'Shared sheet not found'
           });
         }
 
         return res.status(200).json({
           success: true,
-          spreadsheet: doc.spreadsheet,
+          sheet: doc.sheet,
           sharedAt: doc.sharedAt
         });
       }
@@ -177,70 +177,70 @@ export default async function handler(req, res) {
       }
 
       // UPDATE SPREADSHEET DATA
-      if (action === 'updateSpreadsheet') {
-        const { spreadsheetId, spreadsheetData } = data;
+      if (action === 'updateSheet') {
+        const { sheetId, sheetData } = data;
 
-        if (!userData.spreadsheets) {
-          userData.spreadsheets = [];
+        if (!userData.sheets) {
+          userData.sheets = [];
         }
 
-        const existingIndex = userData.spreadsheets.findIndex(
-          s => s.id === spreadsheetId
+        const existingIndex = userData.sheets.findIndex(
+          s => s.id === sheetId
         );
 
         if (existingIndex >= 0) {
-          userData.spreadsheets[existingIndex] = {
-            ...userData.spreadsheets[existingIndex],
-            ...spreadsheetData,
-            id: spreadsheetId,
+          userData.sheets[existingIndex] = {
+            ...userData.sheets[existingIndex],
+            ...sheetData,
+            id: sheetId,
             updatedAt: new Date().toISOString()
           };
         } else {
-          userData.spreadsheets.push({
-            id: spreadsheetId,
-            ...spreadsheetData,
+          userData.sheets.push({
+            id: sheetId,
+            ...sheetData,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           });
         }
 
-        const saved = await saveGridsSections(hash, userData);
+        const saved = await saveSheetsSections(hash, userData);
         if (saved) {
           return res.status(200).json({ success: true, data: userData });
         }
         return res.status(500).json({
           success: false,
-          error: 'Failed to update spreadsheet'
+          error: 'Failed to update sheet'
         });
       }
 
       // DELETE SPREADSHEET
-      if (action === 'deleteSpreadsheet') {
-        const { spreadsheetId } = data;
+      if (action === 'deleteSheet') {
+        const { sheetId } = data;
 
-        const spreadsheetToDelete = userData.spreadsheets.find(
-          s => s.id === spreadsheetId
+        const sheetToDelete = userData.sheets.find(
+          s => s.id === sheetId
         );
 
-        if (spreadsheetToDelete?.sharedId) {
+        if (sheetToDelete?.sharedId) {
           try {
-            await deleteSharedDoc(spreadsheetToDelete.sharedId);
+            await deleteSharedDoc(sheetToDelete.sharedId);
           } catch (e) {
             console.error('[API] Failed to delete shared copy:', e);
           }
         }
 
-        userData.spreadsheets = userData.spreadsheets.filter(
-          s => s.id !== spreadsheetId
+        userData.sheets = userData.sheets.filter(
+          s => s.id !== sheetId
         );
 
-        const saved = await saveGridsSections(hash, userData);
+        const saved = await saveSheetsSections(hash, userData);
         if (saved) {
           return res.status(200).json({ success: true, data: userData });
         }
         return res.status(500).json({
           success: false,
-          error: 'Failed to delete spreadsheet'
+          error: 'Failed to delete sheet'
         });
       }
 
@@ -252,7 +252,7 @@ export default async function handler(req, res) {
           updatedAt: new Date().toISOString()
         };
 
-        const saved = await saveGridsSections(hash, userData);
+        const saved = await saveSheetsSections(hash, userData);
         if (saved) {
           return res.status(200).json({ success: true, data: userData });
         }
@@ -263,35 +263,35 @@ export default async function handler(req, res) {
       }
 
       // SHARE SPREADSHEET
-      if (action === 'shareSpreadsheet') {
-        const { spreadsheetId } = data;
+      if (action === 'shareSheet') {
+        const { sheetId } = data;
 
-        const spreadsheetIndex = userData.spreadsheets.findIndex(
-          s => s.id === spreadsheetId
+        const sheetIndex = userData.sheets.findIndex(
+          s => s.id === sheetId
         );
 
-        if (spreadsheetIndex === -1) {
+        if (sheetIndex === -1) {
           return res.status(404).json({
             success: false,
-            error: 'Spreadsheet not found'
+            error: 'Sheet not found'
           });
         }
 
         const baseUrl = getBaseUrl(req);
 
-        if (userData.spreadsheets[spreadsheetIndex].sharedId) {
-          const existingShareId = userData.spreadsheets[spreadsheetIndex].sharedId;
+        if (userData.sheets[sheetIndex].sharedId) {
+          const existingShareId = userData.sheets[sheetIndex].sharedId;
           return res.status(200).json({
             success: true,
             shareId: existingShareId,
-            shareUrl: `${baseUrl}/grids/shared.html?shared=${existingShareId}`,
+            shareUrl: `${baseUrl}/sheets/shared.html?shared=${existingShareId}`,
             alreadyShared: true
           });
         }
 
         const newShareId = generateId();
         const shareData = {
-          spreadsheet: userData.spreadsheets[spreadsheetIndex],
+          sheet: userData.sheets[sheetIndex],
           sharedAt: new Date().toISOString()
         };
 
@@ -303,20 +303,20 @@ export default async function handler(req, res) {
           });
         }
 
-        userData.spreadsheets[spreadsheetIndex].sharedId = newShareId;
-        const saved = await saveGridsSections(hash, userData);
+        userData.sheets[sheetIndex].sharedId = newShareId;
+        const saved = await saveSheetsSections(hash, userData);
 
         if (!saved) {
           return res.status(500).json({
             success: false,
-            error: 'Failed to update spreadsheet'
+            error: 'Failed to update sheet'
           });
         }
 
         return res.status(200).json({
           success: true,
           shareId: newShareId,
-          shareUrl: `${baseUrl}/grids/shared.html?shared=${newShareId}`,
+          shareUrl: `${baseUrl}/sheets/shared.html?shared=${newShareId}`,
           alreadyShared: false
         });
       }

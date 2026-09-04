@@ -1,19 +1,19 @@
 /**
  * ================================================
- * WORKSPACE - Theme Management
+ * WORKDECK - Theme Management
  * ================================================
- * Light / Dark / System themes for the Workspace landing page.
- * Same pattern as grids/js/themes.js: data-theme attribute + localStorage.
+ * Light / Dark / System themes for the Workdeck landing page.
+ * Same pattern as sheets/js/themes.js: data-theme attribute + localStorage.
  * Theme preference is also persisted server-side in the user document
- * (settings.theme) by workspace.js, so it follows the account across devices.
+ * (settings.theme) by workdeck.js, so it follows the account across devices.
  */
 
-class WsThemeManager {
+class WdThemeManager {
     constructor() {
         this.currentTheme = null;
-        this.storageKey = 'workspace_theme';
+        this.storageKey = 'workdeck_theme';
         this.availableThemes = ['light', 'dark', 'system'];
-        this.defaultTheme = 'dark'; // matches Dox default
+        this.defaultTheme = 'dark'; // matches Docs default
         this.systemMedia = window.matchMedia('(prefers-color-scheme: dark)');
         this.pendingServerSave = null;
     }
@@ -34,7 +34,7 @@ class WsThemeManager {
     }
 
     /**
-     * Called by workspace.js after user data loads, so a theme saved on
+     * Called by workdeck.js after user data loads, so a theme saved on
      * another device takes precedence over the local cache.
      */
     applyFromServer(serverTheme) {
@@ -71,11 +71,11 @@ class WsThemeManager {
         this.currentTheme = effective;
         localStorage.setItem(this.storageKey, themeName);
 
-        if (!options.skipServerSave && window.workspaceApp?.saveSettings) {
+        if (!options.skipServerSave && window.workdeckApp?.saveSettings) {
             // Debounced server-side persistence of the preference string.
             clearTimeout(this.pendingServerSave);
             this.pendingServerSave = setTimeout(() => {
-                window.workspaceApp.saveSettings({ theme: themeName });
+                window.workdeckApp.saveSettings({ theme: themeName });
             }, 600);
         }
     }
@@ -102,9 +102,9 @@ class WsThemeManager {
 }
 
 // Global instance
-const wsThemeManager = new WsThemeManager();
+const wdThemeManager = new WdThemeManager();
 
 if (typeof window !== 'undefined') {
-    window.WsThemeManager = WsThemeManager;
-    window.wsThemeManager = wsThemeManager;
+    window.WdThemeManager = WdThemeManager;
+    window.wdThemeManager = wdThemeManager;
 }

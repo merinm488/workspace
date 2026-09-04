@@ -1,10 +1,10 @@
 /**
- * Workspace service worker.
+ * Workdeck service worker.
  *
- * Scope is '/' (served from the domain root), but Dox (/dox/) and Grids
- * (/grids/) register their own service workers on narrower scopes — so this
+ * Scope is '/' (served from the domain root), but Docs (/docs/) and Sheets
+ * (/sheets/) register their own service workers on narrower scopes — so this
  * worker never intercepts or caches their requests. It only handles the
- * Workspace landing page and its own assets under /js, /css, /icons and
+ * Workdeck landing page and its own assets under /js, /css, /icons and
  * /manifest.json.
  *
  * Strategy:
@@ -13,17 +13,17 @@
  *   - static assets (js/css/png)-> cache first, refresh in background
  */
 
-const VERSION = 'workspace-v1';
+const VERSION = 'workdeck-v2';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
 // The minimal app shell so the login/home page can open offline.
 const PRECACHE_URLS = [
   '/',
-  '/workspace.css',
+  '/workdeck.css',
   '/js/themes.js',
   '/js/auth.js',
-  '/js/workspace.js',
+  '/js/workdeck.js',
   '/js/pwa.js',
   '/manifest.json',
   '/icons/icon-192x192.png',
@@ -44,7 +44,7 @@ self.addEventListener('activate', (event) => {
       .then((keys) => Promise.all(
         keys
           // Only clean up caches this worker version owns.
-          .filter((key) => key.startsWith('workspace-') && key !== STATIC_CACHE && key !== RUNTIME_CACHE)
+          .filter((key) => key.startsWith('workdeck-') && key !== STATIC_CACHE && key !== RUNTIME_CACHE)
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
@@ -55,14 +55,14 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Same-origin only — let Dox and Grids workers handle their own scopes.
+  // Same-origin only — let Docs and Sheets workers handle their own scopes.
   if (url.origin !== self.location.origin) return;
 
   // Never intercept API traffic (auth and user data must stay live).
   if (url.pathname.startsWith('/api/')) return;
 
-  // Leave Dox and Grids to their own service workers.
-  if (url.pathname.startsWith('/dox/') || url.pathname.startsWith('/grids/')) return;
+  // Leave Docs and Sheets to their own service workers.
+  if (url.pathname.startsWith('/docs/') || url.pathname.startsWith('/sheets/')) return;
 
   // Navigation requests: network first so logins land on the fresh page,
   // falling back to the cached shell when offline.

@@ -1,0 +1,475 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Custom CSS Variables for Theme Support
+ */
+
+@layer base {
+  :root {
+    /* Light Theme (Default) */
+    --bg-primary: 250 250 250;
+    --bg-secondary: 255 255 255;
+    --bg-tertiary: 254 240 138;
+    --border-color: 229 229 229;
+    --text-primary: 26 26 26;
+    --text-secondary: 115 115 115;
+    --accent: 250 204 21;
+    --accent-hover: 234 179 8;
+  }
+
+  .dark {
+    /* Dark Theme: Black & White */
+    --bg-primary: 10 10 10;
+    --bg-secondary: 26 26 26;
+    --bg-tertiary: 42 42 42;
+    --border-color: 42 42 42;
+    --text-primary: 229 229 229;
+    --text-secondary: 115 115 115;
+    --accent: 255 255 255;
+    --accent-hover: 229 229 229;
+  }
+
+  body {
+    background-color: rgb(var(--bg-primary));
+    color: rgb(var(--text-primary));
+    transition: background-color 0.2s, color 0.2s;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--bg-tertiary));
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--accent) / 0.5);
+  }
+
+  /* Hide scrollbar by default, show on hover/scroll */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  *:hover {
+    scrollbar-color: rgb(var(--bg-tertiary)) transparent;
+  }
+
+  @supports (scrollbar-width: thin) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: transparent transparent;
+    }
+  }
+}
+
+@layer components {
+  .btn-base {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn-base;
+    background-color: rgb(var(--accent));
+    color: rgb(26, 26, 26);
+  }
+
+  .dark .btn-primary {
+    color: rgb(10, 10, 10);
+  }
+
+  .btn-primary:hover {
+    background-color: rgb(var(--accent-hover));
+  }
+
+  .btn-secondary {
+    @apply btn-base bg-white border border-gray-200 hover:bg-gray-50 text-gray-900;
+  }
+
+  .dark .btn-secondary {
+    @apply bg-gray-800 border-gray-700 hover:bg-gray-700 text-gray-100;
+  }
+
+  .btn-ghost {
+    @apply btn-base bg-transparent hover:bg-gray-100 text-gray-900;
+  }
+
+  .dark .btn-ghost {
+    @apply hover:bg-gray-800 text-gray-100;
+  }
+
+  .input-base {
+    @apply w-full px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-900;
+    @apply placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:border-transparent;
+  }
+
+  .dark .input-base {
+    @apply border-gray-700 bg-gray-800 text-gray-100 placeholder:text-gray-500;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .dark .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-[rgb(var(--accent))] to-[rgb(var(--accent-hover))] bg-clip-text text-transparent;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+}
+
+/* Markdown Preview Styles - Prose Typography */
+@layer base {
+  .prose {
+    color: rgb(var(--text-primary));
+    max-width: 65ch;
+  }
+
+  .prose :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+  }
+
+  .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: rgb(var(--text-primary));
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .prose :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: rgb(var(--text-primary));
+    font-weight: 600;
+    font-size: 0.875em;
+  }
+
+  .prose :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    background-color: rgb(243 244 246);
+    border-radius: 0.375rem;
+    color: rgb(var(--text-primary));
+    font-size: 0.875em;
+  }
+
+  .dark .prose :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    background-color: rgb(17 24 39);
+  }
+
+  .prose :where(blockquote):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    border-left-width: 4px;
+    border-color: rgb(209 213 219);
+    font-style: italic;
+    color: rgb(107 114 128);
+  }
+
+  .dark .prose :where(blockquote):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    border-color: rgb(75 85 99);
+    color: rgb(156 163 175);
+  }
+
+  .prose :where(table):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+  }
+
+  .prose :where(th):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    background-color: rgb(249 250 251);
+    border-width: 1px;
+    border-color: rgb(229 231 235);
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+  }
+
+  .dark .prose :where(th):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    background-color: rgb(31 41 55);
+    border-color: rgb(55 65 81);
+  }
+
+  .prose :where(td):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    border-width: 1px;
+    border-color: rgb(229 231 235);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .dark .prose :where(td):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    border-color: rgb(55 65 81);
+  }
+
+  /* Task List Checkbox Styling */
+  .prose :where(ul[type="checkbox"]):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .prose :where(li):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .prose :where(ul):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    list-style-type: disc;
+    padding-left: 1.5em;
+  }
+
+  .prose :where(ol):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    list-style-type: decimal;
+    padding-left: 1.5em;
+  }
+
+  .prose :where(ul ul, ul ol, ol ul, ol ol):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+
+  .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: rgb(var(--accent));
+    text-decoration: underline;
+  }
+
+  /* Input checkbox styling for task lists */
+  .prose input[type="checkbox"] {
+    margin-right: 0.5em;
+    accent-color: rgb(var(--accent));
+  }
+
+  .dark .prose input[type="checkbox"] {
+    accent-color: rgb(255 255 255);
+  }
+}
+
+/* Highlight.js Dark Theme Override */
+.hljs {
+  background: rgb(17 24 39) !important;
+}
+
+.dark .hljs {
+  background: rgb(10 10 10) !important;
+}
+
+/* Markdown preview scrollbars */
+.prose pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.prose pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prose pre::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99);
+  border-radius: 4px;
+}
+
+.prose pre::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128);
+}
+
+
+/* Modern Markdown Editor - Custom Split View Styles */
+
+/* Textarea styling */
+.markdown-editor-textarea {
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+/* Preview area code blocks */
+.prose pre {
+  background-color: rgb(17 24 39) !important;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.dark .prose pre {
+  background-color: rgb(10 10 10) !important;
+}
+
+/* Preview inline code */
+.prose code:not(pre code) {
+  background-color: rgb(243 244 246);
+  color: rgb(220 38 38);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-weight: 600;
+}
+
+.dark .prose code:not(pre code) {
+  background-color: rgb(31 41 55);
+  color: rgb(248 113 113);
+}
+
+/* Preview blockquote */
+.prose blockquote {
+  border-left: 4px solid rgb(209 213 219);
+  padding-left: 1rem;
+  font-style: italic;
+  color: rgb(107 114 128);
+  margin: 1rem 0;
+}
+
+.dark .prose blockquote {
+  border-left-color: rgb(75 85 99);
+  color: rgb(156 163 175);
+}
+
+/* Preview table */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.prose table th,
+.prose table td {
+  border: 1px solid rgb(229 231 235);
+  padding: 0.5rem 0.75rem;
+}
+
+.dark .prose table th,
+.dark .prose table td {
+  border-color: rgb(55 65 81);
+}
+
+.prose table th {
+  background-color: rgb(249 250 251);
+  font-weight: 600;
+}
+
+.dark .prose table th {
+  background-color: rgb(31 41 55);
+}
+
+/* Preview links */
+.prose a {
+  color: rgb(var(--accent));
+  text-decoration: underline;
+}
+
+/* Preview horizontal rule */
+.prose hr {
+  border: none;
+  border-top: 2px solid rgb(229 231 235);
+  margin: 2rem 0;
+}
+
+.dark .prose hr {
+  border-top-color: rgb(55 65 81);
+}
+
+/* MDEditor Full-Height Overrides (@uiw/react-md-editor v4) */
+.wmd-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Ensure toolbar stays fixed at top */
+.wmd-container .w-md-editor-toolbar {
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Toolbar icon size */
+.w-md-editor-toolbar svg {
+  width: 1.115rem;
+  height: 1.115rem;
+}
+
+/* Center icons vertically in toolbar buttons */
+.w-md-editor-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Split panel container - critical for proper sizing */
+.wmd-container .w-md-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100% !important; /* beats the numeric pixel height the resize bar writes inline */
+  overflow: hidden;
+  /* The library's 1px box-shadow border defaults to a light gray that reads
+     as a stray white line across the dark page — re-theme it per mode. */
+  --md-editor-box-shadow-color: rgb(var(--border-color));
+  padding-bottom: 0;
+}
+
+/* Everything below the toolbar fills the remaining height; the area keeps the
+   library's native scrolling (textarea + highlight layer scroll together). */
+.wmd-container .w-md-editor-content {
+  min-height: 0;
+}
+
+/* The clickable input layer must cover the whole editing area so a click
+   anywhere places the caret — not just the ~100px strip at the top. Beats the
+   inline min-height the library writes onto the element. */
+.wmd-container .w-md-editor-text {
+  min-height: 100% !important;
+}
+
+/* The caret is the focus indicator inside the editor; the app-wide accent
+   focus outline (yellow in light, white in dark) reads as a stray border
+   around the input area, so keep the input visually invisible. */
+.wmd-container textarea.w-md-editor-text-input:focus-visible,
+.wmd-container textarea.w-md-editor-text-input:focus {
+  outline: none;
+}

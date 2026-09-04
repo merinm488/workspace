@@ -4,9 +4,9 @@
  * Mirrors the layout server/dev-server.js serves locally, so production and
  * development see the same paths:
  *
- *   dist/            <- public/            (Workspace landing page at /)
- *   dist/grids/      <- grids/             (Grids app at /grids/)
- *   dist/dox/        <- dox-src/dist/      (Dox vite build, base '/dox/')
+ *   dist/            <- public/            (Workdeck landing page at /)
+ *   dist/sheets/     <- sheets/            (Sheets app at /sheets/)
+ *   dist/docs/       <- docs-src/dist/     (Docs vite build, base '/docs/')
  *
  * The api/ directory is NOT copied — Vercel picks it up from the repo root
  * on its own and builds it as serverless functions.
@@ -23,7 +23,7 @@ rmSync(DIST, { recursive: true, force: true });
 mkdirSync(DIST, { recursive: true });
 
 cpSync(path.join(ROOT, 'public'), DIST, { recursive: true });
-cpSync(path.join(ROOT, 'grids'), path.join(DIST, 'grids'), { recursive: true });
-cpSync(path.join(ROOT, 'dox-src', 'dist'), path.join(DIST, 'dox'), { recursive: true });
+cpSync(path.join(ROOT, 'sheets'), path.join(DIST, 'sheets'), { recursive: true });
+cpSync(path.join(ROOT, 'docs-src', 'dist'), path.join(DIST, 'docs'), { recursive: true });
 
-console.log('[build-dist] Assembled dist/ (public -> /, grids -> /grids/, dox -> /dox/)');
+console.log('[build-dist] Assembled dist/ (public -> /, sheets -> /sheets/, docs -> /docs/)');

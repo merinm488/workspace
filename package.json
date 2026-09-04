@@ -1,21 +1,20 @@
 {
-  "name": "workspace",
+  "name": "workdeck",
   "version": "1.0.0",
-  "description": "Workspace — a unified landing to access daily tools",
+  "description": "Workdeck — a unified landing to access daily tools",
   "type": "module",
   "scripts": {
     "dev": "node server/dev-server.js",
     "start": "node server/dev-server.js",
-    "build:dox": "cd dox-src && npm install && npm run build",
-    "build": "npm run build:dox && node scripts/build-dist.mjs",
-    "postinstall": "cd dox-src && npm install"
+    "build:docs": "cd docs-src && npm install && npm run build",
+    "build": "npm run build:docs && node scripts/build-dist.mjs",
+    "postinstall": "cd docs-src && npm install"
   },
   "keywords": [
-    "workspace",
-    "notes",
+    "workdeck",
+    "docs",
     "spreadsheet",
-    "dox",
-    "grids"
+    "sheets"
   ],
   "license": "MIT",
   "dependencies": {

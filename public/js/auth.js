@@ -1,35 +1,35 @@
 /**
  * ================================================
- * WORKSPACE - Authentication Module
+ * WORKDECK - Authentication Module
  * ================================================
  *
- * Same strategy as the Dox (Notes) app:
+ * Same strategy as the Docs app:
  *   1. POST { key, action: 'login' }
  *   2. 404 "User not found"  ->  POST { key, action: 'create' }  (auto-create)
  *
  * The hash is computed server-side (sha256(key + pepper)), so the raw key
- * never determines storage. On success, sessionStorage gets the workspace
- * session PLUS mirrors for both child apps, so Dox and Grids are already
+ * never determines storage. On success, sessionStorage gets the Workdeck
+ * session PLUS mirrors for both child apps, so Docs and Sheets are already
  * logged in when the user navigates to them:
  *
- *   ws_hash / ws_key           -> workspace session
- *   dox_hash / dox_key         -> Dox expects these (useAuth.js)
- *   grids_user_hash / ..._key  -> Grids expects these (js/auth.js)
+ *   wd_hash / wd_key           -> Workdeck session
+ *   docs_hash / docs_key       -> Docs expects these (useAuth.js)
+ *   sheets_user_hash / ..._key -> Sheets expects these (js/auth.js)
  */
 
-const WS_AUTH_CONFIG = {
-    apiEndpoint: '/api/workspace',
+const WD_AUTH_CONFIG = {
+    apiEndpoint: '/api/workdeck',
     storageKeys: {
-        wsHash: 'ws_hash',
-        wsKey: 'ws_key',
-        doxHash: 'dox_hash',
-        doxKey: 'dox_key',
-        gridsHash: 'grids_user_hash',
-        gridsKey: 'grids_user_key'
+        wdHash: 'wd_hash',
+        wdKey: 'wd_key',
+        docsHash: 'docs_hash',
+        docsKey: 'docs_key',
+        sheetsHash: 'sheets_user_hash',
+        sheetsKey: 'sheets_user_key'
     }
 };
 
-class WsAuthManager {
+class WdAuthManager {
     constructor() {
         this.userHash = null;
         this.userKey = null;
@@ -37,11 +37,11 @@ class WsAuthManager {
     }
 
     /**
-     * Read the session from sessionStorage (ws_hash / ws_key).
+     * Read the session from sessionStorage (wd_hash / wd_key).
      */
     getSession() {
-        const hash = sessionStorage.getItem(WS_AUTH_CONFIG.storageKeys.wsHash);
-        const key = sessionStorage.getItem(WS_AUTH_CONFIG.storageKeys.wsKey);
+        const hash = sessionStorage.getItem(WD_AUTH_CONFIG.storageKeys.wdHash);
+        const key = sessionStorage.getItem(WD_AUTH_CONFIG.storageKeys.wdKey);
         if (hash && key) {
             this.userHash = hash;
             this.userKey = key;
@@ -52,7 +52,7 @@ class WsAuthManager {
 
     /**
      * Authenticate with an access key. Logs in when the account exists,
-     * auto-creates otherwise (same UX as Dox and Grids).
+     * auto-creates otherwise (same UX as Docs and Sheets).
      */
     async authenticate(rawKey) {
         const normalizedKey = String(rawKey || '').trim();
@@ -62,7 +62,7 @@ class WsAuthManager {
 
         // 1) Try login
         try {
-            const response = await fetch(WS_AUTH_CONFIG.apiEndpoint, {
+            const response = await fetch(WD_AUTH_CONFIG.apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: normalizedKey, action: 'login' })
@@ -78,7 +78,7 @@ class WsAuthManager {
             }
 
             if (response.status === 404) {
-                // 2) Unknown key -> auto-create (Dox behavior)
+                // 2) Unknown key -> auto-create (Docs behavior)
                 return await this.createAccount(normalizedKey);
             }
 
@@ -95,7 +95,7 @@ class WsAuthManager {
      */
     async createAccount(normalizedKey) {
         try {
-            const response = await fetch(WS_AUTH_CONFIG.apiEndpoint, {
+            const response = await fetch(WD_AUTH_CONFIG.apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: normalizedKey, action: 'create' })
@@ -118,13 +118,13 @@ class WsAuthManager {
      * Persist the session under all three apps' storage keys.
      */
     storeSession(key, hash, userData) {
-        const s = WS_AUTH_CONFIG.storageKeys;
-        sessionStorage.setItem(s.wsHash, hash);
-        sessionStorage.setItem(s.wsKey, key);
-        sessionStorage.setItem(s.doxHash, hash);
-        sessionStorage.setItem(s.doxKey, key);
-        sessionStorage.setItem(s.gridsHash, hash);
-        sessionStorage.setItem(s.gridsKey, key);
+        const s = WD_AUTH_CONFIG.storageKeys;
+        sessionStorage.setItem(s.wdHash, hash);
+        sessionStorage.setItem(s.wdKey, key);
+        sessionStorage.setItem(s.docsHash, hash);
+        sessionStorage.setItem(s.docsKey, key);
+        sessionStorage.setItem(s.sheetsHash, hash);
+        sessionStorage.setItem(s.sheetsKey, key);
 
         this.userHash = hash;
         this.userKey = key;
@@ -135,7 +135,7 @@ class WsAuthManager {
      * Remove all three apps' keys from sessionStorage.
      */
     clearSession() {
-        const s = WS_AUTH_CONFIG.storageKeys;
+        const s = WD_AUTH_CONFIG.storageKeys;
         Object.values(s).forEach(name => sessionStorage.removeItem(name));
     }
 
@@ -159,7 +159,7 @@ class WsAuthManager {
 
         try {
             const response = await fetch(
-                `${WS_AUTH_CONFIG.apiEndpoint}?hash=${encodeURIComponent(this.userHash)}`,
+                `${WD_AUTH_CONFIG.apiEndpoint}?hash=${encodeURIComponent(this.userHash)}`,
                 { method: 'DELETE' }
             );
             const data = await response.json();
@@ -185,9 +185,9 @@ class WsAuthManager {
 }
 
 // Global instance
-const wsAuth = new WsAuthManager();
+const wdAuth = new WdAuthManager();
 
 if (typeof window !== 'undefined') {
-    window.WsAuthManager = WsAuthManager;
-    window.wsAuth = wsAuth;
+    window.WdAuthManager = WdAuthManager;
+    window.wdAuth = wdAuth;
 }

@@ -1,18 +1,18 @@
 /**
  * ================================================
- * WORKSPACE - Development Server
+ * WORKDECK - Development Server
  * ================================================
  *
  * One Express server that mirrors the production (Vercel) layout on a single
  * origin:
  *
- *   /              -> public/index.html   (Workspace landing page)
+ *   /              -> public/index.html   (Workdeck landing page)
  *   /js, /css      -> public assets
- *   /grids/*       -> grids app (static)
- *   /dox/*         -> dox build (static, vite base '/dox/')
- *   /api/workspace -> api/workspace.js   (workspace API)
- *   /api/notes     -> api/notes.js       (dox API, fetch-style handler)
- *   /api/users     -> api/users.js       (grids API)
+ *   /sheets/*      -> Sheets app (static)
+ *   /docs/*        -> Docs build (static, vite base '/docs/')
+ *   /api/workdeck  -> api/workdeck.js     (Workdeck API)
+ *   /api/docs      -> api/docs.js         (Docs API, fetch-style handler)
+ *   /api/users     -> api/users.js        (Sheets API)
  *
  * Storage: local JSON files under db/users/ (NODE_ENV=development).
  * Run with:  npm run dev   (port 4000)
@@ -43,8 +43,8 @@ if (fs.existsSync(envPath)) {
 // the intent of this server; it is 'development' by default anyway).
 process.env.NODE_ENV = 'development';
 
-const { default: workspaceHandler } = await import('../api/workspace.js');
-const notesModule = await import('../api/notes.js');
+const { default: workdeckHandler } = await import('../api/workdeck.js');
+const docsModule = await import('../api/docs.js');
 const { default: usersHandler } = await import('../api/users.js');
 
 const app = express();
@@ -53,7 +53,7 @@ const PORT = 4000;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// ---------- fetch-style -> express adapter for api/notes.js ----------
+// ---------- fetch-style -> express adapter for api/docs.js ----------
 function createMockRequest(req) {
   return {
     headers: Object.fromEntries(Object.entries(req.headers).map(([k, v]) => [k.toLowerCase(), v])),
@@ -78,8 +78,8 @@ function createMockResponse(res) {
   };
 }
 
-// api/notes.js uses the Web Fetch API style (Request/Response). Adapt it:
-async function adaptNotesHandler(req, res, method) {
+// api/docs.js uses the Web Fetch API style (Request/Response). Adapt it:
+async function adaptDocsHandler(req, res, method) {
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const hasBody = method !== 'GET' && method !== 'DELETE';
   const request = new Request(url, {
@@ -88,7 +88,7 @@ async function adaptNotesHandler(req, res, method) {
     body: hasBody ? JSON.stringify(req.body || {}) : undefined
   });
 
-  const response = await notesModule[method](request);
+  const response = await docsModule[method](request);
   const text = await response.text();
   res.status(response.status);
   res.set('Content-Type', response.headers.get('content-type') || 'application/json');
@@ -96,35 +96,35 @@ async function adaptNotesHandler(req, res, method) {
 }
 
 // ---------- API routes ----------
-app.all('/api/workspace', (req, res) => workspaceHandler(req, res));
-app.all('/api/notes', (req, res) => adaptNotesHandler(req, res, req.method.toUpperCase()));
+app.all('/api/workdeck', (req, res) => workdeckHandler(req, res));
+app.all('/api/docs', (req, res) => adaptDocsHandler(req, res, req.method.toUpperCase()));
 app.all('/api/users', (req, res) => usersHandler(req, res));
 
 // ---------- Static apps ----------
-// Workspace landing page + assets
+// Workdeck landing page + assets
 app.use(express.static(path.join(ROOT_DIR, 'public'), { index: 'index.html' }));
 
-// Dox (vite build with base '/dox/')
-app.use('/dox', express.static(path.join(ROOT_DIR, 'dox'), { index: 'index.html' }));
-app.get('/dox/*', (req, res) => {
-  res.sendFile(path.join(ROOT_DIR, 'dox', 'index.html'));
+// Docs (vite build with base '/docs/')
+app.use('/docs', express.static(path.join(ROOT_DIR, 'docs-src', 'dist'), { index: 'index.html' }));
+app.get('/docs/*', (req, res) => {
+  res.sendFile(path.join(ROOT_DIR, 'docs-src', 'dist', 'index.html'));
 });
 
-// Grids (plain static)
-app.use('/grids', express.static(path.join(ROOT_DIR, 'grids'), { index: 'index.html' }));
+// Sheets (plain static)
+app.use('/sheets', express.static(path.join(ROOT_DIR, 'sheets'), { index: 'index.html' }));
 
-// Root redirect to the workspace landing page
+// Root redirect to the Workdeck landing page
 app.get('/', (req, res) => {
   res.sendFile(path.join(ROOT_DIR, 'public', 'index.html'));
 });
 
 // ---------- Start ----------
 app.listen(PORT, () => {
-  console.log('\n🚀 Workspace Development Server');
-  console.log(`📱 Workspace:  http://localhost:${PORT}`);
-  console.log(`📝 Dox:        http://localhost:${PORT}/dox/`);
-  console.log(`📊 Grids:      http://localhost:${PORT}/grids/`);
-  console.log(`🔌 APIs:       /api/workspace, /api/notes, /api/users`);
+  console.log('\n🚀 Workdeck Development Server');
+  console.log(`📱 Workdeck:   http://localhost:${PORT}`);
+  console.log(`📝 Docs:       http://localhost:${PORT}/docs/`);
+  console.log(`📊 Sheets:     http://localhost:${PORT}/sheets/`);
+  console.log(`🔌 APIs:       /api/workdeck, /api/docs, /api/users`);
   console.log(`📁 Local DB:   ${path.join(ROOT_DIR, 'db')}`);
   console.log('\nPress Ctrl+C to stop\n');
 });
